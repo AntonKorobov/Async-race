@@ -9,6 +9,17 @@ html {
 }
 
 .body {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  height: 100vh;
   font-size: 2rem;
 }
 
@@ -50,12 +61,6 @@ a:hover {
   font-size: 3rem;
 }
 
-.navigation {
-  width: 100%;
-  margin: 1rem 10%;
-  font-size: 3rem;
-}
-
 @media (min-width: 768px) {
   .header__container {
     display: -webkit-box;
@@ -70,8 +75,108 @@ a:hover {
   }
 }
 
+.main__container {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .main__container {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+.control-panel {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.control-panel__create-update-wrapper {
+  margin: 0 auto;
+}
+
+.control-panel__form-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1rem;
+  margin: 1rem auto;
+}
+
+.control-panel__button-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 1rem;
+  margin: 1rem auto;
+}
+
+.control-panel__car-color-input {
+  width: 5rem;
+  height: auto;
+}
+
+.button {
+  padding: 0.5rem;
+  border: 2px solid #ccc;
+  background-color: white;
+  font-size: 1.5rem;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: #ccc;
+}
+
+.button:active {
+  background-color: #3f3f3f;
+}
+
+.racing-area {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border: 2px solid #ccc;
+}
+
+.racing-area__garage {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  border: 2px solid #ccc;
+}
+
+.racing-area__track {
+  -webkit-box-flex: 5;
+      -ms-flex-positive: 5;
+          flex-grow: 5;
+  border: 2px solid #ccc;
+}
+
 .footer {
   background-color: #eee;
+  font-size: 1rem;
 }
 
 .footer__container {
@@ -90,17 +195,13 @@ a:hover {
   }
 }
 
-.link-wrapper {
-  margin: 1rem;
-}
-
 .rss__logo {
-  height: 10rem;
+  height: 5rem;
   width: 100%;
 }
 
 .github__logo {
-  height: 10rem;
+  height: 5rem;
   width: 100%;
 }
 /*# sourceMappingURL=global.css.map */

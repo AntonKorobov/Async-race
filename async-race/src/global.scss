@@ -9,6 +9,10 @@ html {
 }
 
 .body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height:  100vh;
   font-size: 2rem;
 }
 
@@ -43,12 +47,6 @@ a {
   font-size: 3rem;
 }
 
-.navigation {
-  width: 100%;
-  margin: 1rem 10%;
-  font-size: 3rem;
-}
-
 @media (min-width: 768px) {
   .header__container {
     display: flex;
@@ -57,8 +55,79 @@ a {
   }
 }
 
+.main__container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .main__container {
+    flex-direction: row;
+    gap: 2rem;
+  }
+}
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.control-panel__create-update-wrapper {
+  margin: 0 auto;
+}
+
+.control-panel__form-wrapper {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem auto;
+}
+
+.control-panel__button-wrapper {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem auto;
+}
+
+.control-panel__car-color-input {
+  width: 5rem;
+  height: auto;
+}
+
+.button {
+  padding: 0.5rem;
+  border: 2px solid #ccc;
+  background-color: white;
+  font-size: 1.5rem;
+  &:hover {
+    cursor: pointer;
+    background-color: #ccc;
+  }
+  &:active {
+    background-color: rgb(63, 63, 63);
+  }
+}
+
+.racing-area {
+  flex-grow: 1;
+  display: flex;
+  border: 2px solid #ccc;
+}
+
+.racing-area__garage {
+  flex-grow: 1;
+  border: 2px solid #ccc;
+}
+
+.racing-area__track {
+  flex-grow: 5;
+  border: 2px solid #ccc;
+}
+
 .footer {
   background-color: #eee;
+  font-size: 1rem;
 }
 
 .footer__container {
@@ -73,16 +142,12 @@ a {
   }
 }
 
-.link-wrapper {
-  margin: 1rem;
-}
-
 .rss__logo {
-  height: 10rem;
+  height: 5rem;
   width: 100%;
 }
 
 .github__logo {
-  height: 10rem;
+  height: 5rem;
   width: 100%;
 }
