@@ -84,6 +84,13 @@ a {
   margin: 1rem auto;
 }
 
+.control-panel__page-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
 .control-panel__create-update-wrapper {
   margin: 0 auto;
 }
@@ -91,7 +98,7 @@ a {
 .control-panel__form-wrapper {
   display: flex;
   gap: 1rem;
-  margin: 1rem auto;
+  margin: 0 auto 1rem auto;
 }
 
 .control-panel__button-wrapper {
