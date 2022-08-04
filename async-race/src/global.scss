@@ -134,8 +134,52 @@ a {
 }
 
 .racing-area__garage {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   width: 10rem;
   border: 2px solid #ccc;
+}
+
+.car {
+ 
+}
+
+.car__img {
+  display: block;
+  max-width:100%;
+}
+
+.car__settings-wrapper {
+  display: flex;
+  gap: 1rem;
+  overflow-x: visible;
+}
+
+.car__buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 auto;
+}
+
+.car__name {
+  font-size: 2rem;
+}
+
+.car__button {
+  // flex-grow: 1;
+  padding: 0.4rem;
+  border: 2px solid #ccc;
+  background-color: white;
+  font-size: 1.5rem;
+  &:hover {
+    cursor: pointer;
+    background-color: #ccc;
+  }
+  &:active {
+    background-color: rgb(63, 63, 63);
+  }
 }
 
 .racing-area__track {
