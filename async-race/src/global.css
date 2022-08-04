@@ -78,7 +78,6 @@ a:hover {
 }
 
 .main {
-  height: 100%;
   padding: 10px 40px;
 }
 
@@ -183,7 +182,6 @@ a:hover {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  border: 2px solid #ccc;
 }
 
 .racing-area__garage {
@@ -197,8 +195,8 @@ a:hover {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  gap: 0.5rem;
   width: 10rem;
-  border: 2px solid #ccc;
 }
 
 .car__img {
@@ -207,11 +205,11 @@ a:hover {
 }
 
 .car__settings-wrapper {
+  width: 35rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   gap: 1rem;
-  overflow-x: visible;
 }
 
 .car__buttons-wrapper {
@@ -230,10 +228,14 @@ a:hover {
 }
 
 .car__button {
+  z-index: 1000;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
   padding: 0.4rem;
   border: 2px solid #ccc;
   background-color: white;
-  font-size: 1.5rem;
+  font-size: 1rem;
 }
 
 .car__button:hover {
@@ -249,12 +251,16 @@ a:hover {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
-  border: 2px solid #ccc;
+  border-left: 2px solid #e01c1c;
+  border-right: 2px solid #e01c1c;
 }
 
 .racing-area__finish {
   width: 10rem;
-  border: 2px solid #ccc;
+}
+
+.racing-area__finish_word {
+  margin-left: 1rem;
 }
 
 .footer {
