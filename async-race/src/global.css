@@ -8,7 +8,7 @@ html {
   font-size: 62.5%;
 }
 
-.body {
+.main-page {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -229,6 +229,7 @@ a:hover {
 
 .car__button {
   z-index: 1000;
+  max-width: 10rem;
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -257,10 +258,6 @@ a:hover {
 
 .racing-area__finish {
   width: 10rem;
-}
-
-.racing-area__finish_word {
-  margin-left: 1rem;
 }
 
 .footer {

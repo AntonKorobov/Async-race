@@ -8,7 +8,7 @@ html {
   font-size: 62.5%;
 }
 
-.body {
+.main-page {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -170,6 +170,7 @@ a {
 
 .car__button {
   z-index: 1000;
+  max-width: 10rem;
   flex-grow: 1;
   padding: 0.4rem;
   border: 2px solid #ccc;
@@ -193,10 +194,6 @@ a {
 .racing-area__finish {
   width: 10rem;
   // border: 2px solid #ccc;
-}
-
-.racing-area__finish_word {
-  margin-left: 1rem;
 }
 
 .footer {
