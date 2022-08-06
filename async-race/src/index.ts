@@ -1,9 +1,11 @@
-import { carDataInterface } from './components/dataInterface';
-import { getCars } from './components/getCars';
-import { render, renderGarage } from './components/ui';
 import './global.css';
-
-const cars = await getCars<carDataInterface[]>(1);
+import { render, renderGarage } from './components/ui';
+import { createCarUtil } from './components/utilits';
 
 render();
-renderGarage(cars);
+renderGarage();
+
+const createCarButton = document.querySelector('.control-panel__button_create') as HTMLElement;
+createCarButton.addEventListener('click', () => {
+    createCarUtil();
+});

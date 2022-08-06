@@ -1,26 +1,29 @@
 import { carDataInterface } from './dataInterface';
+import { getCars } from './api';
 
-export function renderGarage(cars: carDataInterface[]): void {
+export async function renderGarage(): Promise<void> {
+    const cars = await getCars<carDataInterface[]>(1);
     const garage = document.querySelector('.racing-area__garage') as HTMLElement;
+    garage.innerHTML = '';
     for (let i = 0; i < cars.length; i++) {
         const car = document.createElement('div');
         car.classList.add('car');
-        car.innerHTML = renderCar(cars[i].name);
+        car.innerHTML = renderCar(cars[i].name, cars[i].id);
         garage.appendChild(car);
     }
 }
 
-export function renderCar(name: string): string {
+export function renderCar(name: string, id: number): string {
     return `
     <div class="car__settings-wrapper">
-      <button class="car__button">SELECT</button>
-      <button class="car__button">REMOVE</button>
+      <button class="car__button car__button_select" data-id="${id}">SELECT</button>
+      <button class="car__button car__button_remove" data-id="${id}">REMOVE</button>
       <h2 class="car__name">${name}</h2>
     </div>
     <img class="car__img" src="./assets/car.svg" alt="car">
     <div class="car__buttons-wrapper">
-      <button class="car__button">STOP</button>
-      <button class="car__button car__button_play">GO</button>
+      <button class="car__button car__button_stop" data-id="${id}">STOP</button>
+      <button class="car__button car__button_play" data-id="${id}">GO</button>
     </div>`;
 }
 
@@ -44,17 +47,17 @@ export function render(): void {
           <div class="control-panel__form-wrapper">
             <input type="text" class="control-panel__car-name-input" name="add-car-name">
             <input type="color" class="control-panel__car-color-input" name="create-car-color" value="#ed9121">
-            <button class="control-panel__button button">CREATE</button>
+            <button class="control-panel__button control-panel__button_create button">CREATE</button>
           </div>
           <div class="control-panel__form-wrapper">
             <input type="text" class="control-panel__car-name-input" name="change-car-name">
             <input type="color" class="control-panel__car-color-input" name="update-car-color" value="#ed9121">
-            <button class="control-panel__button button">UPDATE</button>
+            <button class="control-panel__button control-panel__button_update button">UPDATE</button>
           </div>
         </div>
         <div class="control-panel__button-wrapper">
-          <button class="button">RESET</button>
-          <button class="button">GENERATE CARS</button>
+          <button class="control-panel__button control-panel__button_reset button">RESET</button>
+          <button class="control-panel__button control-panel__button_generate button">GENERATE CARS</button>
         </div>
       </section>
       <section class="racing-area">
