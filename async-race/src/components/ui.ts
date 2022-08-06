@@ -9,24 +9,46 @@ export async function renderGarage(): Promise<void> {
     for (let i = 0; i < cars.length; i++) {
         const car = document.createElement('div');
         car.classList.add('car');
-        car.innerHTML = renderCar(cars[i].name, cars[i].id);
+        car.innerHTML = renderCar(cars[i].name, cars[i].id, cars[i].color);
         garage.appendChild(car);
     }
 }
 
-export function renderCar(name: string, id: number): string {
+export function createCarImage(color: string, id: number): string {
+    return `<svg class="car__img" width="90" height="42" xmlns="http://www.w3.org/2000/svg" data-id="${id}">
+  <g class="prefix__ldl-scale">
+      <path d="m69.3,42.4c-5,0 -9,-3.5 -10.2,-8a3.6,3.6 0 0 1 -0.4,0l-28.4,0a10.5,10.5 0 0 1 -20.4,-0.2a3.5,3.5 0 0 1 -0.9,0c-5.1,-0.9 -9,-5.3 -9,-10.5l0,-0.6c0,-5.7 3.5,-10.8 8,-11.6c2,-0.3 5.7,-2.5 7.9,-5c3.3,-3.7 9.5,-6.4 14.5,-6.5l14.4,0a22,22 0 0 1 14.7,6.5l0.2,0.2a22,22 0 0 0 10,5.5l10,2c5.6,1 10,5.6 10.3,10.5c0,2.3 -0.8,4.6 -2.4,6.3a11,11 0 0 1 -7.8,3.4l-0.3,0c-1.1,4.6 -5.3,8 -10.2,8z" fill="#d1d1d1"/>
+      <path d="m19.7,24.9a7,7 0 1 1 0,14a7,7 0 1 1 0,-14zm49.3,0a7,7 0 1 1 0,14a7,7 0 0 1 -7,-7a7,7 0 0 1 7,-7zm9.8,-7.3l-10.1,-1.9c-4,-0.7 -9.3,-3.7 -12,-6.6l-0.2,-0.3c-2.6,-2.9 -8,-5.3 -12,-5.2l-14.5,0c-4,0 -9.3,2.4 -12,5.3s-7,5.6 -9.8,6c-2.8,0.7 -5.2,4.3 -5,8.3l0,0.5c0,3.6 2.7,6.5 6,7.1a10.6,10.6 0 0 1 21,0.1l28.2,0a10.6,10.6 0 0 1 21,0c3.8,0 6.8,-2.7 6.7,-6c-0.1,-3.2 -3.4,-6.4 -7.3,-7.2l0,-0.1zm-54.6,-1.4c-4,0 -5.7,-2 -4,-4.3c2,-2.4 6.7,-4.4 10.6,-4.4l4,0l2.5,8.8l-13.1,0l0,-0.1zm27.7,0.1l-10.8,0l-2.6,-8.8l5.5,0c4,0 9,2 11.2,4.4c2.1,2.5 0.7,4.5 -3.3,4.4z" fill="${color}"/>
+  </g>
+</svg>`;
+}
+
+export function renderCar(name: string, id: number, color: string): string {
     return `
     <div class="car__settings-wrapper">
       <button class="car__button car__button_select" data-id="${id}">SELECT</button>
       <button class="car__button car__button_remove" data-id="${id}">REMOVE</button>
       <h2 class="car__name">${name}</h2>
     </div>
-    <img class="car__img" src="./assets/car.svg" alt="car" data-id="${id}">
+    ${createCarImage(color, id)}
     <div class="car__buttons-wrapper">
       <button class="car__button car__button_stop" data-id="${id}">STOP</button>
       <button class="car__button car__button_play" data-id="${id}">GO</button>
     </div>`;
 }
+// export function renderCar(name: string, id: number): string {
+//   return `
+//   <div class="car__settings-wrapper">
+//     <button class="car__button car__button_select" data-id="${id}">SELECT</button>
+//     <button class="car__button car__button_remove" data-id="${id}">REMOVE</button>
+//     <h2 class="car__name">${name}</h2>
+//   </div>
+//   <img class="car__img" src="./assets/car3.svg" alt="car" data-id="${id}">
+//   <div class="car__buttons-wrapper">
+//     <button class="car__button car__button_stop" data-id="${id}">STOP</button>
+//     <button class="car__button car__button_play" data-id="${id}">GO</button>
+//   </div>`;
+// }
 
 export function render(): void {
     const html = `
