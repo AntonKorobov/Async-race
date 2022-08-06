@@ -28,3 +28,15 @@ export const createCar = async <T>(name: string, color: string): Promise<T> => {
         return Promise.reject(error);
     }
 };
+
+export const deleteCar = async <T>(id: number): Promise<T> => {
+    const response = await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+        method: 'DELETE',
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const error = new Error('Error HTTP: ' + response.status);
+        return Promise.reject(error);
+    }
+};
