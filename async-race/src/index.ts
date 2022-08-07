@@ -1,5 +1,6 @@
 import './global.css';
-import { render, renderGarage, addEvents } from './components/ui';
+import { render, renderGarage } from './components/ui';
+import { addEvents } from './components/utilits';
 
 render();
 renderGarage();

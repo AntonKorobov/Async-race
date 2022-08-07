@@ -1,6 +1,5 @@
 import { carDataInterface } from './dataInterface';
 import { getCars } from './api';
-import { createCarUtil, deleteCarUtil, updateCarUtil } from './utilits';
 
 export async function renderGarage(): Promise<void> {
     const cars = await getCars<carDataInterface[]>(1);
@@ -33,22 +32,9 @@ export function renderCar(name: string, id: number, color: string): string {
     ${createCarImage(color, id)}
     <div class="car__buttons-wrapper">
       <button class="car__button car__button_stop" data-id="${id}">STOP</button>
-      <button class="car__button car__button_play" data-id="${id}">GO</button>
+      <button class="car__button car__button_go" data-id="${id}">GO</button>
     </div>`;
 }
-// export function renderCar(name: string, id: number): string {
-//   return `
-//   <div class="car__settings-wrapper">
-//     <button class="car__button car__button_select" data-id="${id}">SELECT</button>
-//     <button class="car__button car__button_remove" data-id="${id}">REMOVE</button>
-//     <h2 class="car__name">${name}</h2>
-//   </div>
-//   <img class="car__img" src="./assets/car3.svg" alt="car" data-id="${id}">
-//   <div class="car__buttons-wrapper">
-//     <button class="car__button car__button_stop" data-id="${id}">STOP</button>
-//     <button class="car__button car__button_play" data-id="${id}">GO</button>
-//   </div>`;
-// }
 
 export function render(): void {
     const html = `
@@ -113,44 +99,4 @@ export function render(): void {
     mainPage.classList.add('main-page');
     mainPage.innerHTML = html;
     document.body.appendChild(mainPage);
-}
-
-export function addEvents(): void {
-    const createCarButton = document.querySelector('.control-panel__button_create') as HTMLElement;
-    createCarButton.addEventListener('click', () => {
-        createCarUtil();
-    });
-
-    const updateCarButton = document.querySelector('.control-panel__button_update') as HTMLElement;
-    const nameInput = document.querySelector('.control-panel__car-name-input_update') as HTMLInputElement;
-    const colorInput = document.querySelector('.control-panel__car-color-input_update') as HTMLInputElement;
-
-    const garage = document.querySelector('.racing-area__garage') as HTMLElement;
-    garage.addEventListener('click', (event) => {
-        if ((event.target as HTMLElement).classList.contains('car__button_remove')) {
-            const id = Number((event.target as HTMLElement).getAttribute('data-id'));
-            deleteCarUtil(id);
-        }
-
-        if ((event.target as HTMLElement).classList.contains('car__button_select')) {
-            deselectCars();
-            (event.target as HTMLElement).parentElement?.nextElementSibling?.classList.add('selected');
-            updateCarButton.removeAttribute('disabled');
-            nameInput.removeAttribute('disabled');
-            colorInput.removeAttribute('disabled');
-        }
-    });
-
-    updateCarButton.addEventListener('click', () => {
-        const id = Number((document.querySelector('.selected') as HTMLElement).getAttribute('data-id'));
-        updateCarUtil(id);
-        deselectCars();
-        updateCarButton.setAttribute('disabled', '');
-        nameInput.setAttribute('disabled', '');
-        colorInput.setAttribute('disabled', '');
-    });
-
-    function deselectCars(): void {
-        Array.from(document.querySelectorAll('.selected')).forEach((element) => element.classList.remove('selected'));
-    }
 }
