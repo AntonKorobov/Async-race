@@ -89,8 +89,4 @@ export const switchDriveMode = async (id: number, status = 'drive'): Promise<dri
     } else {
         return { ...(await response.json()) };
     }
-    // const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
-    //     method: 'PATCH',
-    // }).catch();
-    // return response.status !== 200 ? { success: false } : { ...(await response.json()) }; //??????
 };

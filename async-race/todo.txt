@@ -5,3 +5,5 @@
 3. default export storage!?
 
 4. await VS Promise
+
+5. data-attributes VS id (search querySelector)

@@ -40,7 +40,7 @@ export function updateCarUtil(id: number): void {
     }
 }
 
-export async function startCarEngineUtil(carId: number, carImage: HTMLElement): Promise<void> {
+export async function startCarEngineUtil(carId: number): Promise<{success: boolean, carId: number, driveTime: number}> {
     // let object: startCarEngineResponce;
     // const tryStartCar = new Promise((resolve) => {
     //     resolve(object = startStopCarEngine(carId, 'started'));
@@ -48,17 +48,19 @@ export async function startCarEngineUtil(carId: number, carImage: HTMLElement): 
     // tryStartCar.then(() => {
     // const { velocity, distance } = object;
     // });
-    const { velocity, distance } = await startStopCarEngine(carId, 'started'); //Promise????
+    const { velocity, distance } = await startStopCarEngine(carId, 'started');
+    const carImage = document.querySelector(`#car-${carId}`) as HTMLElement;
 
     const TRACK_LENGTH = (document.querySelector('.racing-area__track') as HTMLElement).offsetWidth + 100;
     const duration = distance / velocity;
 
     storage.animation[carId] = requestAnimationFrame(startCarAnimation);
     let start = 0;
-
+    let driveTime = 0;
     async function startCarAnimation(timestamp: number) {
         if (start === 0) start = timestamp;
-        const progress = (timestamp - start) / duration;
+        driveTime = timestamp - start;
+        const progress = (driveTime) / duration;
         carImage.style.transform = `translateX(${TRACK_LENGTH * progress}px)`;
         if (progress < 1) {
             storage.animation[carId] = requestAnimationFrame(startCarAnimation);
@@ -71,8 +73,9 @@ export async function startCarEngineUtil(carId: number, carImage: HTMLElement): 
     if (!success) {
         cancelAnimationFrame(storage.animation[carId]);
     }
-
-    //return succces, time, id
+    console.log(storage.cars);
+    
+    return {success, carId, driveTime};
 }
 
 export async function stopCarEngineUtil(carId: number) {
@@ -82,9 +85,10 @@ export async function stopCarEngineUtil(carId: number) {
     tryStopCar.then(() => cancelAnimationFrame(storage.animation[carId]));
 }
 
-// export async function switchDriveModeUtil(): Promise<void> {
+export async function startRace(action: Function) {
+    const tryStartAllCars: number[] = storage.cars.map((id) => action(id));
+}
 
-// }
 
 export function addEvents(): void {
     const createCarButton = document.querySelector('.control-panel__button_create') as HTMLElement;
@@ -112,13 +116,12 @@ export function addEvents(): void {
         }
 
         if ((event.target as HTMLElement).classList.contains('car__button_go')) {
-            const carImage = (event.target as HTMLElement).parentElement?.previousElementSibling as HTMLElement;
             const id = Number((event.target as HTMLElement).getAttribute('data-id'));
-            startCarEngineUtil(id, carImage);
+            startCarEngineUtil(id);
         }
 
         if ((event.target as HTMLElement).classList.contains('car__button_stop')) {
-            const id = Number((event.target as HTMLElement).getAttribute('data-id')); //Is car running?????
+            const id = Number((event.target as HTMLElement).getAttribute('data-id'));
             stopCarEngineUtil(id);
         }
     });
@@ -135,4 +138,9 @@ export function addEvents(): void {
     function deselectCars(): void {
         Array.from(document.querySelectorAll('.selected')).forEach((element) => element.classList.remove('selected'));
     }
+
+    const raceButton = document.querySelector('.control-panel__button_race') as HTMLElement;
+    raceButton.addEventListener('click', () => {
+        startRace(startCarEngineUtil);
+    });
 }
