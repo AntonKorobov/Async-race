@@ -40,14 +40,12 @@ export function updateCarUtil(id: number): void {
     }
 }
 
-export async function startCarEngineUtil(carId: number): Promise<{success: boolean, carId: number, driveTime: number}> {
-    // let object: startCarEngineResponce;
-    // const tryStartCar = new Promise((resolve) => {
-    //     resolve(object = startStopCarEngine(carId, 'started'));
-    // });
-    // tryStartCar.then(() => {
-    // const { velocity, distance } = object;
-    // });
+export type raceResult = { 
+    success: boolean; carId: number; driveTime: number 
+};
+export async function startCarEngineUtil(
+    carId: number
+): Promise<raceResult> {
     const { velocity, distance } = await startStopCarEngine(carId, 'started');
     const carImage = document.querySelector(`#car-${carId}`) as HTMLElement;
 
@@ -60,7 +58,7 @@ export async function startCarEngineUtil(carId: number): Promise<{success: boole
     async function startCarAnimation(timestamp: number) {
         if (start === 0) start = timestamp;
         driveTime = timestamp - start;
-        const progress = (driveTime) / duration;
+        const progress = driveTime / duration;
         carImage.style.transform = `translateX(${TRACK_LENGTH * progress}px)`;
         if (progress < 1) {
             storage.animation[carId] = requestAnimationFrame(startCarAnimation);
@@ -74,8 +72,8 @@ export async function startCarEngineUtil(carId: number): Promise<{success: boole
         cancelAnimationFrame(storage.animation[carId]);
     }
     console.log(storage.cars);
-    
-    return {success, carId, driveTime};
+
+    return { success, carId, driveTime };
 }
 
 export async function stopCarEngineUtil(carId: number) {
@@ -86,9 +84,14 @@ export async function stopCarEngineUtil(carId: number) {
 }
 
 export async function startRace(action: Function) {
-    const tryStartAllCars: number[] = storage.cars.map((id) => action(id));
+    const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
+    const { success, carId, driveTime } = getRaceResult(tryStartAllCarsPromises);
+    console.log(success, carId, driveTime);
 }
 
+export async function getRaceResult(promises: Promise<raceResult>[]): Promise<raceResult> {
+    return await Promise.race(promises);
+}
 
 export function addEvents(): void {
     const createCarButton = document.querySelector('.control-panel__button_create') as HTMLElement;
