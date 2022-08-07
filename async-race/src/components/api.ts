@@ -61,11 +61,11 @@ export const updateCar = async <T>(id: number, name: string, color: string): Pro
 };
 
 type engineStatus = 'started' | 'stopped';
-type startCarEngineResponce = {
+export type startCarEngineResponce = {
     velocity: number;
     distance: number;
 };
-export const startCarEngine = async (id: number, status: engineStatus): Promise<startCarEngineResponce> => {
+export const startStopCarEngine = async (id: number, status: engineStatus): Promise<startCarEngineResponce> => {
     const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
         method: 'PATCH',
     });

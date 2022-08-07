@@ -3,3 +3,5 @@
 2. +100px to distance is a magic
 
 3. default export storage!?
+
+4. await VS Promise

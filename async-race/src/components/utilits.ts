@@ -1,4 +1,4 @@
-import { createCar, deleteCar, updateCar, startCarEngine } from './api';
+import { createCar, deleteCar, updateCar, startStopCarEngine } from './api';
 import { renderGarage } from './ui';
 import { carDataInterface } from './dataInterface';
 import { storage } from './storage';
@@ -41,7 +41,15 @@ export function updateCarUtil(id: number): void {
 }
 
 export async function startCarEngineUtil(carId: number, carImage: HTMLElement): Promise<void> {
-    const { velocity, distance } = await startCarEngine(carId, 'started');
+    // let object: startCarEngineResponce;
+    // const tryStartCar = new Promise((resolve) => {
+    //     resolve(object = startStopCarEngine(carId, 'started'));
+    // });
+    // tryStartCar.then(() => {
+    // const { velocity, distance } = object;
+    // });
+    const { velocity, distance } = await startStopCarEngine(carId, 'started'); //Promise????
+
     const TRACK_LENGTH = (document.querySelector('.racing-area__track') as HTMLElement).offsetWidth + 100;
     const duration = distance / velocity;
 
@@ -60,8 +68,11 @@ export async function startCarEngineUtil(carId: number, carImage: HTMLElement): 
     }
 }
 
-export function stopCarEngine(carId: number) {
-    cancelAnimationFrame(storage.animation[carId]);
+export async function stopCarEngine(carId: number) {
+    const tryStopCar = new Promise((resolve) => {
+        resolve(startStopCarEngine(carId, 'stopped'));
+    });
+    tryStopCar.then(() => cancelAnimationFrame(storage.animation[carId]));
 }
 
 export function addEvents(): void {
