@@ -61,7 +61,7 @@ export const updateCar = async <T>(id: number, name: string, color: string): Pro
 };
 
 type engineStatus = 'started' | 'stopped';
-export type startCarEngineResponce = {
+type startCarEngineResponce = {
     velocity: number;
     distance: number;
 };
@@ -75,4 +75,22 @@ export const startStopCarEngine = async (id: number, status: engineStatus): Prom
         const error = new Error('Error HTTP: ' + response.status);
         return Promise.reject(error);
     }
+};
+
+type driveCarResponce = {
+    success: boolean;
+};
+export const switchDriveMode = async (id: number, status = 'drive'): Promise<driveCarResponce> => {
+    const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
+        method: 'PATCH',
+    });
+    if (response.status !== 200) {
+        return { success: false };
+    } else {
+        return { ...(await response.json()) };
+    }
+    // const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
+    //     method: 'PATCH',
+    // }).catch();
+    // return response.status !== 200 ? { success: false } : { ...(await response.json()) }; //??????
 };

@@ -1,4 +1,4 @@
-import { createCar, deleteCar, updateCar, startStopCarEngine } from './api';
+import { createCar, deleteCar, updateCar, startStopCarEngine, switchDriveMode } from './api';
 import { renderGarage } from './ui';
 import { carDataInterface } from './dataInterface';
 import { storage } from './storage';
@@ -56,7 +56,7 @@ export async function startCarEngineUtil(carId: number, carImage: HTMLElement): 
     storage.animation[carId] = requestAnimationFrame(startCarAnimation);
     let start = 0;
 
-    function startCarAnimation(timestamp: number) {
+    async function startCarAnimation(timestamp: number) {
         if (start === 0) start = timestamp;
         const progress = (timestamp - start) / duration;
         carImage.style.transform = `translateX(${TRACK_LENGTH * progress}px)`;
@@ -66,14 +66,25 @@ export async function startCarEngineUtil(carId: number, carImage: HTMLElement): 
             cancelAnimationFrame(storage.animation[carId]);
         }
     }
+
+    const { success } = await switchDriveMode(carId);
+    if (!success) {
+        cancelAnimationFrame(storage.animation[carId]);
+    }
+
+    //return succces, time, id
 }
 
-export async function stopCarEngine(carId: number) {
+export async function stopCarEngineUtil(carId: number) {
     const tryStopCar = new Promise((resolve) => {
         resolve(startStopCarEngine(carId, 'stopped'));
     });
     tryStopCar.then(() => cancelAnimationFrame(storage.animation[carId]));
 }
+
+// export async function switchDriveModeUtil(): Promise<void> {
+
+// }
 
 export function addEvents(): void {
     const createCarButton = document.querySelector('.control-panel__button_create') as HTMLElement;
@@ -108,7 +119,7 @@ export function addEvents(): void {
 
         if ((event.target as HTMLElement).classList.contains('car__button_stop')) {
             const id = Number((event.target as HTMLElement).getAttribute('data-id')); //Is car running?????
-            stopCarEngine(id);
+            stopCarEngineUtil(id);
         }
     });
 
