@@ -1,4 +1,4 @@
-import { createCar, deleteCar, updateCar } from './api';
+import { createCar, deleteCar, updateCar, startCarEngine } from './api';
 import { renderGarage } from './ui';
 import { carDataInterface } from './dataInterface';
 import { storage } from './storage';
@@ -40,9 +40,10 @@ export function updateCarUtil(id: number): void {
     }
 }
 
-export function startCarEngine(carId: number, carImage: HTMLElement): void {
+export async function startCarEngineUtil(carId: number, carImage: HTMLElement): Promise<void> {
+    const { velocity, distance } = await startCarEngine(carId, 'started');
     const TRACK_LENGTH = (document.querySelector('.racing-area__track') as HTMLElement).offsetWidth + 100;
-    const duration = 5000;
+    const duration = distance / velocity;
 
     storage.animation[carId] = requestAnimationFrame(startCarAnimation);
     let start = 0;
@@ -60,7 +61,6 @@ export function startCarEngine(carId: number, carImage: HTMLElement): void {
 }
 
 export function stopCarEngine(carId: number) {
-    console.log('STOP', storage.animation[carId]);
     cancelAnimationFrame(storage.animation[carId]);
 }
 
@@ -92,7 +92,7 @@ export function addEvents(): void {
         if ((event.target as HTMLElement).classList.contains('car__button_go')) {
             const carImage = (event.target as HTMLElement).parentElement?.previousElementSibling as HTMLElement;
             const id = Number((event.target as HTMLElement).getAttribute('data-id'));
-            startCarEngine(id, carImage);
+            startCarEngineUtil(id, carImage);
         }
 
         if ((event.target as HTMLElement).classList.contains('car__button_stop')) {

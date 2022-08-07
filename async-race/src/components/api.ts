@@ -59,3 +59,20 @@ export const updateCar = async <T>(id: number, name: string, color: string): Pro
         return Promise.reject(error);
     }
 };
+
+type engineStatus = 'started' | 'stopped';
+type startCarEngineResponce = {
+    velocity: number;
+    distance: number;
+};
+export const startCarEngine = async (id: number, status: engineStatus): Promise<startCarEngineResponce> => {
+    const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
+        method: 'PATCH',
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const error = new Error('Error HTTP: ' + response.status);
+        return Promise.reject(error);
+    }
+};
