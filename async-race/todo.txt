@@ -1,1 +1,5 @@
 1. deselect car by press select twice
+
+2. +100px to distance is a magic
+
+3. default export storage!?

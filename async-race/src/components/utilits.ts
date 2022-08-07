@@ -1,6 +1,7 @@
 import { createCar, deleteCar, updateCar } from './api';
 import { renderGarage } from './ui';
 import { carDataInterface } from './dataInterface';
+import { storage } from './storage';
 
 export function createCarUtil(): void {
     const nameInput = document.querySelector('.control-panel__car-name-input_create') as HTMLInputElement;
@@ -39,27 +40,28 @@ export function updateCarUtil(id: number): void {
     }
 }
 
-export function startCarEngine(carImage: HTMLElement): number {
+export function startCarEngine(carId: number, carImage: HTMLElement): void {
     const TRACK_LENGTH = (document.querySelector('.racing-area__track') as HTMLElement).offsetWidth + 100;
     const duration = 5000;
 
-    const carEngineId = requestAnimationFrame(startCarAnimation);
+    storage.animation[carId] = requestAnimationFrame(startCarAnimation);
     let start = 0;
-    function startCarAnimation (timestamp: number) {
+
+    function startCarAnimation(timestamp: number) {
         if (start === 0) start = timestamp;
         const progress = (timestamp - start) / duration;
-        carImage.style.transform = `translateX(${TRACK_LENGTH * progress}px)`; 
+        carImage.style.transform = `translateX(${TRACK_LENGTH * progress}px)`;
         if (progress < 1) {
-            requestAnimationFrame(startCarAnimation);
+            storage.animation[carId] = requestAnimationFrame(startCarAnimation);
         } else {
-            cancelAnimationFrame(carEngineId);
+            cancelAnimationFrame(storage.animation[carId]);
         }
     }
-    return carEngineId;
 }
 
-export function stopEngine(requestId: number) {
-    window.cancelAnimationFrame(requestId);
+export function stopCarEngine(carId: number) {
+    console.log('STOP', storage.animation[carId]);
+    cancelAnimationFrame(storage.animation[carId]);
 }
 
 export function addEvents(): void {
@@ -88,10 +90,14 @@ export function addEvents(): void {
         }
 
         if ((event.target as HTMLElement).classList.contains('car__button_go')) {
-            // const id = Number((event.target as HTMLElement).getAttribute('data-id'));
             const carImage = (event.target as HTMLElement).parentElement?.previousElementSibling as HTMLElement;
-            const stopButton = (event.target as HTMLElement).previousElementSibling as HTMLElement;
-            stopButton.setAttribute('carEngineId', startCarEngine(carImage).toString());
+            const id = Number((event.target as HTMLElement).getAttribute('data-id'));
+            startCarEngine(id, carImage);
+        }
+
+        if ((event.target as HTMLElement).classList.contains('car__button_stop')) {
+            const id = Number((event.target as HTMLElement).getAttribute('data-id')); //Is car running?????
+            stopCarEngine(id);
         }
     });
 
