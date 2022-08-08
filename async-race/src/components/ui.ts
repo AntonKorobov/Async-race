@@ -1,11 +1,14 @@
 import { carDataInterface } from './dataInterface';
 import { getCars } from './api';
 import { storage } from './storage';
+import { getWinners } from './api';
 
-export async function renderGarage(): Promise<void> {
+export async function renderCars(): Promise<void> {
     storage.cars.length = 0;
     const cars = await getCars<carDataInterface[]>(1);
-    const garage = document.querySelector('.racing-area__garage') as HTMLElement;
+
+    const garage = document.querySelector('.page-area__garage') as HTMLElement;
+
     garage.innerHTML = '';
     for (let i = 0; i < cars.length; i++) {
         const car = document.createElement('div');
@@ -45,7 +48,7 @@ export function render(): void {
     <header class="header">
       <div class="header__container container">
         <a href="#" class="title">
-          <h1>Async-race</h1>
+          <h1>Async-race (Work in progress... Sorry)</h1>
         </a>
       </div>
   </header>
@@ -58,8 +61,8 @@ export function render(): void {
     <div class="main__container container">
       <section class="control-panel">
         <div class="control-panel__page-buttons-wrapper">
-          <button class="button">TO GARAGE</button>
-          <button class="button">TO WINNERS</button>
+          <button class="button control-panel__button_to-garage">TO GARAGE</button>
+          <button class="button control-panel__button_to-winners">TO WINNERS</button>
         </div>
         <div class="control-panel__create-update-wrapper">
           <div class="control-panel__form-wrapper">
@@ -79,12 +82,16 @@ export function render(): void {
           <button class="control-panel__button control-panel__button_generate button">GENERATE CARS</button>
         </div>
       </section>
-      <section class="racing-area">
-        <div class="racing-area__garage">
+      <section class="page-area page-area_garage-page page-visible">
+        <div class="page-area__garage">
         </div>
-        <div class="racing-area__track">
+        <div class="page-area__track">
         </div>
-        <div class="racing-area__finish">
+        <div class="page-area__finish">
+        </div>
+      </section>
+      <section class="page-area page-area_winners-page">
+        <div class="page-area__winners-page">
         </div>
       </section>
     </div>
@@ -110,3 +117,69 @@ export function render(): void {
     mainPage.innerHTML = html;
     document.body.appendChild(mainPage);
 }
+
+export async function renderWinnersPage(): Promise<void> {
+    const garagePage = document.querySelector('.page-area_garage-page') as HTMLElement;
+    garagePage.classList.remove('page-visible');
+
+    const winnersPage = document.querySelector('.page-area_winners-page') as HTMLElement;
+    winnersPage.classList.add('page-visible');
+
+    // function add winners data to storage (name, color, time, wins);
+    const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
+
+    const html = `
+    <div class="winners-table">
+      <table>
+        <tr>
+          <th>№</th>
+          <th>Car</th>
+          <th>Model</th>
+        </tr>
+        
+        ${arrayOfWinners
+            .map(
+                (winner: { id: number; wins: number; time: number }, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${winner.wins}</td>
+            <td>${winner.time}</td>
+          </tr>`
+            )
+            .join('')}
+      </table>
+  </div>`;
+
+    // const winners = document.createElement('div');
+    // winners.classList.add('winners-table');
+    winnersPage.innerHTML = html;
+    // racingArea.appendChild(winners);
+}
+
+export async function renderGaragePage(): Promise<void> {
+    const garagePage = document.querySelector('.page-area_garage-page') as HTMLElement;
+    garagePage.classList.add('page-visible');
+
+    const winnersPage = document.querySelector('.page-area_winners-page') as HTMLElement;
+    winnersPage.classList.remove('page-visible');
+    renderCars();
+    // addEvents();
+}
+
+// const html = `
+//   <table>
+//     <tr>
+//       <th>№</th>
+//       <th>Car</th>
+//       <th>Model</th>
+//     </tr>
+
+//     ${arrayOfWinners.map( (winner: { id: number, wins: number, time: number }, index) => `
+//       <tr>
+//         <td>${index + 1}</td>
+//         <td>${getCarImg(winner.car.color)}</td>
+//         <td>${winner.car.name}</td>
+//         <td>${winner.wins}</td>
+//         <td>${winner.time}</td>
+//       </tr>`).join('')}
+//   </table>`;

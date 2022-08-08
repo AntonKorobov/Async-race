@@ -175,7 +175,7 @@ a:hover {
   background-color: #3f3f3f;
 }
 
-.racing-area {
+.page-area {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -184,7 +184,7 @@ a:hover {
   display: flex;
 }
 
-.racing-area__garage {
+.page-area__garage {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -252,7 +252,7 @@ a:hover {
   background-color: #3f3f3f;
 }
 
-.racing-area__track {
+.page-area__track {
   -webkit-box-flex: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
@@ -260,7 +260,7 @@ a:hover {
   border-right: 2px solid #e01c1c;
 }
 
-.racing-area__finish {
+.page-area__finish {
   width: 10rem;
 }
 
@@ -311,10 +311,33 @@ a:hover {
 
 .modal-window-winner__information {
   text-align: center;
-  font-size: 5rem;
+  font-size: 3rem;
 }
 
 .modal-window-winner_visible {
   display: block;
+}
+
+.winners-table {
+  margin: 0 auto;
+  border: 2px solid #ccc;
+}
+
+.winners-table td, .winners-table tr, .winners-table th {
+  border: 2px solid #ccc;
+}
+
+.page-area_garage-page {
+  display: none;
+}
+
+.page-area_winners-page {
+  display: none;
+}
+
+.page-visible {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 /*# sourceMappingURL=global.css.map */

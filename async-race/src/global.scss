@@ -127,13 +127,13 @@ a {
   }
 }
 
-.racing-area {
+.page-area {
   flex-grow: 1;
   display: flex;
   // border: 2px solid #ccc;
 }
 
-.racing-area__garage {
+.page-area__garage {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -190,13 +190,13 @@ a {
   }
 }
 
-.racing-area__track {
+.page-area__track {
   flex-grow: 1;
   border-left: 2px solid #e01c1c;
   border-right: 2px solid #e01c1c;
 }
 
-.racing-area__finish {
+.page-area__finish {
   width: 10rem;
   // border: 2px solid #ccc;
 }
@@ -243,9 +243,32 @@ a {
 
 .modal-window-winner__information {
   text-align: center;
-  font-size: 5rem;
+  font-size: 3rem;
 }
 
 .modal-window-winner_visible {
   display: block;
+}
+
+.winners-table {
+  margin: 0 auto;
+  border: 2px solid #ccc;
+  // table {
+  //   border: 2px solid #ccc;
+  // }
+  td, tr, th {
+    border: 2px solid #ccc;
+  }
+}
+
+.page-area_garage-page {
+  display: none;
+}
+
+.page-area_winners-page {
+  display: none;
+}
+
+.page-visible {
+  display: flex;
 }

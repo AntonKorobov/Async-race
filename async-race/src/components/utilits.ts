@@ -1,5 +1,14 @@
-import { createCar, deleteCar, updateCar, startStopCarEngine, switchDriveMode } from './api';
-import { renderGarage } from './ui';
+import {
+    createCar,
+    deleteCar,
+    updateCar,
+    startStopCarEngine,
+    switchDriveMode,
+    createWinner,
+    updateWinner,
+    getWinner,
+} from './api';
+import { renderGaragePage, renderWinnersPage } from './ui';
 import { carDataInterface } from './dataInterface';
 import { storage } from './storage';
 
@@ -14,7 +23,7 @@ export function createCarUtil(): void {
         const tryCreateCar = new Promise((resolve) => {
             resolve(createCar<carDataInterface[]>(name, color));
         });
-        tryCreateCar.then(() => renderGarage());
+        tryCreateCar.then(() => renderGaragePage());
     }
 }
 
@@ -22,7 +31,7 @@ export function deleteCarUtil(id: number): void {
     const tryCreateCar = new Promise((resolve) => {
         resolve(deleteCar<carDataInterface[]>(id));
     });
-    tryCreateCar.then(() => renderGarage());
+    tryCreateCar.then(() => renderGaragePage());
 }
 
 export function updateCarUtil(id: number): void {
@@ -36,7 +45,7 @@ export function updateCarUtil(id: number): void {
         const tryUpdateCar = new Promise((resolve) => {
             resolve(updateCar<carDataInterface[]>(id, name, color));
         });
-        tryUpdateCar.then(() => renderGarage());
+        tryUpdateCar.then(() => renderGaragePage());
     }
 }
 
@@ -53,7 +62,7 @@ export async function startCarEngineUtil(carId: number): Promise<raceResult> {
     const { success } = await switchDriveMode(carId);
     cancelAnimationFrame(storage.animation[carId]);
     const driveTime = storage.animation[carId];
-    console.log({ carId, driveTime });
+    // console.log(success, carId, driveTime);
     if (success) {
         return Promise.resolve({ carId, driveTime });
     }
@@ -61,7 +70,7 @@ export async function startCarEngineUtil(carId: number): Promise<raceResult> {
 }
 
 export function animation(carId: number, carImage: HTMLElement, velocity: number, distance: number): void {
-    const TRACK_LENGTH = (document.querySelector('.racing-area__track') as HTMLElement).offsetWidth + 100;
+    const TRACK_LENGTH = (document.querySelector('.page-area__track') as HTMLElement).offsetWidth + 100;
     let start = 0;
     let driveTime = 0;
 
@@ -93,16 +102,29 @@ export async function startRace(action: (id: number) => Promise<raceResult>): Pr
     closeModalWindowWinner();
     const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
     const { carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
-    console.log(`WINNER: ${carId}, TIME: ${driveTime}`);
-
+    addInformationToWinnList(carId, driveTime);
     showWinner(carId, driveTime / 1000);
+    // console.log(storage.winners);
 }
 
 export function showWinner(id: number, driveTime: number): void {
     const modalWindowWinnerText = document.querySelector('.modal-window-winner__information_text') as HTMLElement;
-    modalWindowWinnerText.innerHTML = `CAR: ${id} WIN RACE<br>TIME: ${driveTime}`;
+    modalWindowWinnerText.innerHTML = `CAR: ${id} WIN RACE<br>TIME: ${driveTime}sec`;
     const modalWindowWinner = document.querySelector('.modal-window-winner') as HTMLElement;
     modalWindowWinner.classList.add('modal-window-winner_visible');
+}
+
+export async function addInformationToWinnList(id: number, driveTime: number): Promise<void> {
+    const isWinnerExists = await getWinner(id);
+    if (Object.keys(isWinnerExists).length === 0) {
+        await createWinner(id, 1, driveTime);
+    } else {
+        const { id, wins, time } = isWinnerExists;
+        let winsCounter = wins;
+        if (winsCounter) winsCounter = 0;
+        if (driveTime > time) driveTime = time;
+        await updateWinner(id, winsCounter + 1, driveTime);
+    }
 }
 
 export function returnCarsOnStartPosition(): void {
@@ -127,7 +149,7 @@ export function addEvents(): void {
     const nameInput = document.querySelector('.control-panel__car-name-input_update') as HTMLInputElement;
     const colorInput = document.querySelector('.control-panel__car-color-input_update') as HTMLInputElement;
 
-    const garage = document.querySelector('.racing-area__garage') as HTMLElement;
+    const garage = document.querySelector('.page-area__garage') as HTMLElement;
     garage.addEventListener('click', (event) => {
         if ((event.target as HTMLElement).classList.contains('car__button_remove')) {
             const id = Number((event.target as HTMLElement).getAttribute('data-id'));
@@ -178,5 +200,15 @@ export function addEvents(): void {
         });
         returnCarsOnStartPosition();
         closeModalWindowWinner();
+    });
+
+    const winnersButton = document.querySelector('.control-panel__button_to-winners') as HTMLElement;
+    winnersButton.addEventListener('click', () => {
+        renderWinnersPage();
+    });
+
+    const garageButton = document.querySelector('.control-panel__button_to-garage') as HTMLElement;
+    garageButton.addEventListener('click', () => {
+        renderGaragePage();
     });
 }

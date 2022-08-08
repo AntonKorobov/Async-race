@@ -91,3 +91,85 @@ export const switchDriveMode = async (id: number, status = 'drive'): Promise<dri
         return { ...(await response.json()) };
     }
 };
+
+export const createWinner = async (id: number, wins: number, time: number): Promise<void> => {
+    const response = await fetch(`http://127.0.0.1:3000/winners`, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: id,
+            wins: wins,
+            time: time,
+        }),
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const error = new Error('Error HTTP: ' + response.status);
+        return Promise.reject(error);
+    }
+};
+
+export const updateWinner = async (id: number, wins: number, time: number): Promise<void> => {
+    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+            wins: wins,
+            time: time,
+        }),
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const error = new Error('Error HTTP: ' + response.status);
+        return Promise.reject(error);
+    }
+};
+
+export type getWinnerResponse = {
+    id: number;
+    wins: number;
+    time: number;
+};
+export const getWinner = async (id: number): Promise<getWinnerResponse> => {
+    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+        method: 'GET',
+    });
+    if (response.status !== 200) {
+        return await response.json();
+    } else {
+        return { ...(await response.json()) };
+    }
+};
+
+export type SortType = 'id' | 'wins' | 'time';
+export type OrderType = 'ASC' | 'DESC';
+export type getWinnersResponse = {
+    id: number;
+    wins: number;
+    time: number;
+}[];
+export const getWinners = async (
+    page: number,
+    limit: number,
+    sort: SortType,
+    order: OrderType
+): Promise<getWinnersResponse> => {
+    const response = await fetch(
+        `http://127.0.0.1:3000/winners?_page=${page}&_limit=${limit}$_sort${sort}$_order${order}`,
+        {
+            method: 'GET',
+        }
+    );
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const error = new Error('Error HTTP: ' + response.status);
+        return Promise.reject(error);
+    }
+};
