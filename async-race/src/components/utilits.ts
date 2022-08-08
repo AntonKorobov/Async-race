@@ -89,10 +89,10 @@ export async function stopCarEngineUtil(carId: number) {
 }
 
 export async function startRace(action: (id: number) => Promise<raceResult>): Promise<void> {
-    // const cars: NodeListOf<HTMLElement> = document.querySelectorAll('.car');
-    // cars.forEach((car) => {
-    //     car.style.transform = `translateX(-0px)`;
-    // });
+    const cars: NodeListOf<HTMLElement> = document.querySelectorAll('.car__img');
+    cars.forEach((car) => {
+        car.style.transform = `translateX(-0px)`;
+    });
     const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
     const { success, carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
     console.log('WINNER:', carId, 'TIME:', driveTime, 'STATUS: ', success);
