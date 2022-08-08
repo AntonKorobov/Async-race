@@ -41,7 +41,7 @@ export function updateCarUtil(id: number): void {
 }
 
 export type raceResult = {
-    success: boolean;
+    // success: boolean;
     carId: number;
     driveTime: number;
 };
@@ -53,11 +53,11 @@ export async function startCarEngineUtil(carId: number): Promise<raceResult> {
     const { success } = await switchDriveMode(carId);
     cancelAnimationFrame(storage.animation[carId]);
     const driveTime = storage.animation[carId];
-    console.log({ success, carId, driveTime });
+    console.log({ carId, driveTime });
     if (success) {
-        return Promise.resolve({ success, carId, driveTime });
+        return Promise.resolve({ carId, driveTime });
     }
-    return Promise.reject({ success, carId, driveTime });
+    return Promise.reject({ carId, driveTime });
 }
 
 export function animation(carId: number, carImage: HTMLElement, velocity: number, distance: number): void {
@@ -89,13 +89,32 @@ export async function stopCarEngineUtil(carId: number) {
 }
 
 export async function startRace(action: (id: number) => Promise<raceResult>): Promise<void> {
+    returnCarsOnStartPosition();
+    closeModalWindowWinner();
+    const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
+    const { carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
+    console.log(`WINNER: ${carId}, TIME: ${driveTime}`);
+
+    showWinner(carId, driveTime / 1000);
+}
+
+export function showWinner(id: number, driveTime: number): void {
+    const modalWindowWinnerText = document.querySelector('.modal-window-winner__information_text') as HTMLElement;
+    modalWindowWinnerText.innerHTML = `CAR: ${id} WIN RACE<br>TIME: ${driveTime}`;
+    const modalWindowWinner = document.querySelector('.modal-window-winner') as HTMLElement;
+    modalWindowWinner.classList.add('modal-window-winner_visible');
+}
+
+export function returnCarsOnStartPosition(): void {
     const cars: NodeListOf<HTMLElement> = document.querySelectorAll('.car__img');
     cars.forEach((car) => {
-        car.style.transform = `translateX(-0px)`;
+        car.style.transform = `translateX(0)`;
     });
-    const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
-    const { success, carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
-    console.log('WINNER:', carId, 'TIME:', driveTime, 'STATUS: ', success);
+}
+
+export function closeModalWindowWinner(): void {
+    const modalWindowWinner = document.querySelector('.modal-window-winner') as HTMLElement;
+    modalWindowWinner.classList.remove('modal-window-winner_visible');
 }
 
 export function addEvents(): void {
@@ -150,5 +169,14 @@ export function addEvents(): void {
     const raceButton = document.querySelector('.control-panel__button_race') as HTMLElement;
     raceButton.addEventListener('click', () => {
         startRace(startCarEngineUtil);
+    });
+
+    const resetButton = document.querySelector('.control-panel__button_reset') as HTMLElement;
+    resetButton.addEventListener('click', () => {
+        storage.cars.map((id) => {
+            stopCarEngineUtil(id);
+        });
+        returnCarsOnStartPosition();
+        closeModalWindowWinner();
     });
 }

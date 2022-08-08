@@ -50,6 +50,11 @@ export function render(): void {
       </div>
   </header>
   <main class="main">
+    <div class="modal-window-winner">
+      <div class="modal-window-winner__information">
+        <p class="modal-window-winner__information_text"></p>
+      </div>
+    </div>
     <div class="main__container container">
       <section class="control-panel">
         <div class="control-panel__page-buttons-wrapper">

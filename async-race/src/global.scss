@@ -230,3 +230,22 @@ a {
   height: 5rem;
   width: 100%;
 }
+
+.modal-window-winner {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #eee;
+  z-index: 9999;
+}
+
+.modal-window-winner__information {
+  text-align: center;
+  font-size: 5rem;
+}
+
+.modal-window-winner_visible {
+  display: block;
+}
