@@ -40,22 +40,33 @@ export function updateCarUtil(id: number): void {
     }
 }
 
-export type raceResult = { 
-    success: boolean; carId: number; driveTime: number 
+export type raceResult = {
+    success: boolean;
+    carId: number;
+    driveTime: number;
 };
-export async function startCarEngineUtil(
-    carId: number
-): Promise<raceResult> {
+export async function startCarEngineUtil(carId: number): Promise<raceResult> {
     const { velocity, distance } = await startStopCarEngine(carId, 'started');
     const carImage = document.querySelector(`#car-${carId}`) as HTMLElement;
 
-    const TRACK_LENGTH = (document.querySelector('.racing-area__track') as HTMLElement).offsetWidth + 100;
-    const duration = distance / velocity;
+    animation(carId, carImage, velocity, distance);
+    const { success } = await switchDriveMode(carId);
+    cancelAnimationFrame(storage.animation[carId]);
+    const driveTime = storage.animation[carId];
+    console.log({ success, carId, driveTime });
+    if (success) {
+        return Promise.resolve({ success, carId, driveTime });
+    }
+    return Promise.reject({ success, carId, driveTime });
+}
 
-    storage.animation[carId] = requestAnimationFrame(startCarAnimation);
+export function animation(carId: number, carImage: HTMLElement, velocity: number, distance: number): void {
+    const TRACK_LENGTH = (document.querySelector('.racing-area__track') as HTMLElement).offsetWidth + 100;
     let start = 0;
     let driveTime = 0;
-    async function startCarAnimation(timestamp: number) {
+
+    function startCarAnimation(timestamp: number) {
+        const duration = distance / velocity;
         if (start === 0) start = timestamp;
         driveTime = timestamp - start;
         const progress = driveTime / duration;
@@ -67,13 +78,7 @@ export async function startCarEngineUtil(
         }
     }
 
-    const { success } = await switchDriveMode(carId);
-    if (!success) {
-        cancelAnimationFrame(storage.animation[carId]);
-    }
-    console.log(storage.cars);
-
-    return { success, carId, driveTime };
+    storage.animation[carId] = requestAnimationFrame(startCarAnimation);
 }
 
 export async function stopCarEngineUtil(carId: number) {
@@ -83,14 +88,14 @@ export async function stopCarEngineUtil(carId: number) {
     tryStopCar.then(() => cancelAnimationFrame(storage.animation[carId]));
 }
 
-export async function startRace(action: Function) {
+export async function startRace(action: (id: number) => Promise<raceResult>): Promise<void> {
+    // const cars: NodeListOf<HTMLElement> = document.querySelectorAll('.car');
+    // cars.forEach((car) => {
+    //     car.style.transform = `translateX(-0px)`;
+    // });
     const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
-    const { success, carId, driveTime } = getRaceResult(tryStartAllCarsPromises);
-    console.log(success, carId, driveTime);
-}
-
-export async function getRaceResult(promises: Promise<raceResult>[]): Promise<raceResult> {
-    return await Promise.race(promises);
+    const { success, carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
+    console.log('WINNER:', carId, 'TIME:', driveTime, 'STATUS: ', success);
 }
 
 export function addEvents(): void {
