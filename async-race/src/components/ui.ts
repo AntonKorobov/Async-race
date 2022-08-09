@@ -1,7 +1,7 @@
 import { carDataInterface } from './dataInterface';
 import { getCars } from './api';
 import { storage } from './storage';
-import { getWinners } from './api';
+import { updateWinners } from './utilits';
 
 export async function renderCars(): Promise<void> {
     storage.cars.length = 0;
@@ -119,41 +119,38 @@ export function render(): void {
 }
 
 export async function renderWinnersPage(): Promise<void> {
+    await updateWinners();
+    console.log(storage.winners);
+    console.log(storage.winners.length);
+    
     const garagePage = document.querySelector('.page-area_garage-page') as HTMLElement;
     garagePage.classList.remove('page-visible');
 
     const winnersPage = document.querySelector('.page-area_winners-page') as HTMLElement;
     winnersPage.classList.add('page-visible');
 
-    // function add winners data to storage (name, color, time, wins);
-    const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
-
     const html = `
     <div class="winners-table">
       <table>
-        <tr>
-          <th>№</th>
-          <th>Car</th>
-          <th>Model</th>
-        </tr>
-        
-        ${arrayOfWinners
-            .map(
-                (winner: { id: number; wins: number; time: number }, index) => `
           <tr>
-            <td>${index + 1}</td>
-            <td>${winner.wins}</td>
-            <td>${winner.time}</td>
-          </tr>`
-            )
-            .join('')}
+            <th>№</th>
+            <th>Car</th>
+            <th>Model</th>
+            <th>Wins</th>
+            <th>Time</th>
+          </tr>
+        ${storage.winners.map((winner: { id: number; name: string; color: string; wins: number; time: number }, index) => `
+            <tr>
+              <td>${index + 1}</td>
+              <td>${createCarImage(winner.color, winner.id)}</td>
+              <td>${winner.name}</td>
+              <td>${winner.wins}</td>
+              <td>${winner.time}</td>
+            </tr>`).join('')}
       </table>
   </div>`;
 
-    // const winners = document.createElement('div');
-    // winners.classList.add('winners-table');
     winnersPage.innerHTML = html;
-    // racingArea.appendChild(winners);
 }
 
 export async function renderGaragePage(): Promise<void> {
@@ -165,21 +162,3 @@ export async function renderGaragePage(): Promise<void> {
     renderCars();
     // addEvents();
 }
-
-// const html = `
-//   <table>
-//     <tr>
-//       <th>№</th>
-//       <th>Car</th>
-//       <th>Model</th>
-//     </tr>
-
-//     ${arrayOfWinners.map( (winner: { id: number, wins: number, time: number }, index) => `
-//       <tr>
-//         <td>${index + 1}</td>
-//         <td>${getCarImg(winner.car.color)}</td>
-//         <td>${winner.car.name}</td>
-//         <td>${winner.wins}</td>
-//         <td>${winner.time}</td>
-//       </tr>`).join('')}
-//   </table>`;

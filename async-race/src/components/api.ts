@@ -1,5 +1,17 @@
 const limitGarage = 100;
 
+export type getCarResponse = {
+    name: string;
+    color: string;
+    id: number;
+};
+export const getCar = async (id: number): Promise<getCarResponse> => {
+    const response = await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+        method: 'GET',
+    });
+    return await response.json();
+};
+
 export const getCars = async <T>(page: number, limit = limitGarage): Promise<T> => {
     const response = await fetch(`http://127.0.0.1:3000/garage?_page=${page}&_limit=${limit}`);
     if (response.ok) {

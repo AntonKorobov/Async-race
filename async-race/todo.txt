@@ -7,3 +7,5 @@
 4. await VS Promise
 
 5. data-attributes VS id (search querySelector)
+
+6. array of winners sort!!

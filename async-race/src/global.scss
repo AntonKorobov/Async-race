@@ -251,13 +251,16 @@ a {
 }
 
 .winners-table {
+  display: flex;
+  align-items: center;
   margin: 0 auto;
-  border: 2px solid #ccc;
-  // table {
-  //   border: 2px solid #ccc;
-  // }
-  td, tr, th {
+  table {
+    border-collapse: collapse;
+    text-align: center;
+  }
+  td, th {
     border: 2px solid #ccc;
+    padding: 0.5rem;
   }
 }
 

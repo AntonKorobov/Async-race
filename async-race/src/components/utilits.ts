@@ -7,6 +7,8 @@ import {
     createWinner,
     updateWinner,
     getWinner,
+    getWinners,
+    getCar,
 } from './api';
 import { renderGaragePage, renderWinnersPage } from './ui';
 import { carDataInterface } from './dataInterface';
@@ -98,11 +100,13 @@ export async function stopCarEngineUtil(carId: number) {
 }
 
 export async function startRace(action: (id: number) => Promise<raceResult>): Promise<void> {
+    console.log(storage.winners);
+    console.log(storage.winners.length);
     returnCarsOnStartPosition();
     closeModalWindowWinner();
     const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
     const { carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
-    addInformationToWinnList(carId, driveTime);
+    addInformationToWinList(carId, driveTime);
     showWinner(carId, driveTime / 1000);
     // console.log(storage.winners);
 }
@@ -114,7 +118,7 @@ export function showWinner(id: number, driveTime: number): void {
     modalWindowWinner.classList.add('modal-window-winner_visible');
 }
 
-export async function addInformationToWinnList(id: number, driveTime: number): Promise<void> {
+export async function addInformationToWinList(id: number, driveTime: number): Promise<void> {
     const isWinnerExists = await getWinner(id);
     if (Object.keys(isWinnerExists).length === 0) {
         await createWinner(id, 1, driveTime);
@@ -137,6 +141,17 @@ export function returnCarsOnStartPosition(): void {
 export function closeModalWindowWinner(): void {
     const modalWindowWinner = document.querySelector('.modal-window-winner') as HTMLElement;
     modalWindowWinner.classList.remove('modal-window-winner_visible');
+}
+
+export async function updateWinners(): Promise<void> {
+    storage.winners.length = 0;
+    const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
+    await Promise.all(arrayOfWinners.map(async (winner: { id: number; wins: number; time: number }) => {
+        const { name, color, id } = await getCar(winner.id);
+        const wins = winner.wins;
+        const time = winner.time;
+        storage.winners.push({ id, name, color, wins, time });
+    }));
 }
 
 export function addEvents(): void {

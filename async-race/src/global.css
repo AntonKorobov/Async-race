@@ -319,12 +319,23 @@ a:hover {
 }
 
 .winners-table {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   margin: 0 auto;
-  border: 2px solid #ccc;
 }
 
-.winners-table td, .winners-table tr, .winners-table th {
+.winners-table table {
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.winners-table td, .winners-table th {
   border: 2px solid #ccc;
+  padding: 0.5rem;
 }
 
 .page-area_garage-page {

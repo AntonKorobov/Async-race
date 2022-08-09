@@ -1,19 +1,19 @@
-// interface winnerInterface {
-//     id: number,
-//     time: number,
-//     name: string,
-//     color: string,
-//     winsCounter: number,
-// }
+interface winnersInterface {
+    id: number;
+    name: string;
+    color: string;
+    wins: number;
+    time: number;
+}
 
 interface storageInterface {
     cars: number[];
     animation: { [carId: number]: number };
-    winners: { [carId: number]: number };
+    winners: winnersInterface[];
 }
 
 export const storage: storageInterface = {
     cars: [],
     animation: {},
-    winners: {},
+    winners: [],
 };
