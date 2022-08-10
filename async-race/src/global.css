@@ -301,6 +301,7 @@ a:hover {
 .modal-window-winner {
   display: none;
   position: fixed;
+  gap: 1rem;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
@@ -309,13 +310,21 @@ a:hover {
   z-index: 9999;
 }
 
+.modal-window-winner_cross-button {
+  font-size: 3rem;
+  font-weight: 600;
+  padding: 0 2rem;
+}
+
 .modal-window-winner__information {
   text-align: center;
   font-size: 3rem;
 }
 
 .modal-window-winner_visible {
-  display: block;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .winners-table {

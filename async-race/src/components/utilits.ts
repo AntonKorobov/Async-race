@@ -227,4 +227,10 @@ export function addEvents(): void {
     garageButton.addEventListener('click', () => {
         renderGaragePage();
     });
+
+    const crossButton = document.querySelector('.modal-window-winner_cross-button') as HTMLElement;
+    crossButton.addEventListener('click', () => {
+        returnCarsOnStartPosition();
+        closeModalWindowWinner();
+    });
 }

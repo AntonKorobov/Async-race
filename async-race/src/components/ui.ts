@@ -57,6 +57,7 @@ export function render(): void {
       <div class="modal-window-winner__information">
         <p class="modal-window-winner__information_text"></p>
       </div>
+      <button class="modal-window-winner_cross-button">&times</button>
     </div>
     <div class="main__container container">
       <section class="control-panel">
@@ -161,5 +162,4 @@ export async function renderGaragePage(): Promise<void> {
     const winnersPage = document.querySelector('.page-area_winners-page') as HTMLElement;
     winnersPage.classList.remove('page-visible');
     renderCars();
-    // addEvents();
 }

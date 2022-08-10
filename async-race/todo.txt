@@ -9,3 +9,7 @@
 5. data-attributes VS id (search querySelector)
 
 6. array of winners sort!!
+
+7. after select text area and color fill with selected car data!
+
+8. button close modal window ()
