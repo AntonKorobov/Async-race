@@ -104,12 +104,13 @@ export async function startRace(action: (id: number) => Promise<raceResult>): Pr
     const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
     const { carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
     addInformationToWinList(carId, driveTime);
-    showWinner(carId, driveTime / 1000);
+    const carModel = await getCar(carId);
+    showWinner(carModel.name, driveTime / 1000);
 }
 
-export function showWinner(id: number, driveTime: number): void {
+export function showWinner(model: string, driveTime: number): void {
     const modalWindowWinnerText = document.querySelector('.modal-window-winner__information_text') as HTMLElement;
-    modalWindowWinnerText.innerHTML = `CAR: ${id} WIN RACE<br>TIME: ${driveTime}sec`;
+    modalWindowWinnerText.innerHTML = `"${model}" WIN RACE<br>TIME: ${driveTime}sec`;
     const modalWindowWinner = document.querySelector('.modal-window-winner') as HTMLElement;
     modalWindowWinner.classList.add('modal-window-winner_visible');
 }
