@@ -125,7 +125,7 @@ export function render(): void {
 }
 
 export async function renderWinnersPage(): Promise<void> {
-    await updateWinners();
+    await updateWinners('ASC');
 
     const currentPageIcon = document.querySelector('.pagination__page-number') as HTMLElement;
     currentPageIcon.innerHTML = storage.winnersPage.toString();
@@ -157,6 +157,8 @@ export async function renderWinnersPage(): Promise<void> {
             )
             .join('')}
       </table>
+      <button class="button page-area_wins-button">Sort by Wins</button>
+      <button class="button page-area_time-button">Sort by Time</button>
   </div>`;
 
     winnersPage.innerHTML = html;

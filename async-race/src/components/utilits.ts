@@ -125,7 +125,7 @@ export async function addInformationToWinList(id: number, driveTime: number): Pr
         if (driveTime > time) driveTime = time;
         await updateWinner(id, wins + 1, driveTime / 1000);
     }
-    updateWinners();
+    updateWinners('ASC');
 }
 
 export function returnCarsOnStartPosition(): void {
@@ -140,9 +140,9 @@ export function closeModalWindowWinner(): void {
     modalWindowWinner.classList.remove('modal-window-winner_visible');
 }
 
-export async function updateWinners(): Promise<void> {
+export async function updateWinners(sort: 'ASC' | 'DESC'): Promise<void> {
     storage.winners.length = 0;
-    const arrayOfWinners = await getWinners(storage.winnersPage, storage.limitGarage, 'time', 'ASC');
+    const arrayOfWinners = await getWinners(storage.winnersPage, storage.limitGarage, 'time', sort);
     await Promise.all(
         arrayOfWinners.map(async (winner: { id: number; wins: number; time: number }) => {
             const { name, color, id } = await getCar(winner.id);
@@ -305,5 +305,15 @@ export function addEvents(): void {
                 renderWinnersPage();
                 break;
         }
+    });
+
+    const sortByTimeButton = document.querySelector('.page-area_time-button') as HTMLElement;
+    sortByTimeButton.addEventListener('click', () => {
+        updateWinners('ASC');
+    });
+
+    const sortByWinsButton = document.querySelector('.page-area_wins-button') as HTMLElement;
+    sortByWinsButton.addEventListener('click', () => {
+        updateWinners('DESC');
     });
 }
