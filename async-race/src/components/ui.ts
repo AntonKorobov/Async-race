@@ -120,15 +120,12 @@ export function render(): void {
 
 export async function renderWinnersPage(): Promise<void> {
     await updateWinners();
-    console.log(storage.winners);
-    console.log(storage.winners.length);
-    
+
     const garagePage = document.querySelector('.page-area_garage-page') as HTMLElement;
     garagePage.classList.remove('page-visible');
 
     const winnersPage = document.querySelector('.page-area_winners-page') as HTMLElement;
     winnersPage.classList.add('page-visible');
-
     const html = `
     <div class="winners-table">
       <table>
@@ -139,14 +136,18 @@ export async function renderWinnersPage(): Promise<void> {
             <th>Wins</th>
             <th>Time</th>
           </tr>
-        ${storage.winners.map((winner: { id: number; name: string; color: string; wins: number; time: number }, index) => `
+        ${storage.winners
+            .map(
+                (winner: { id: number; name: string; color: string; wins: number; time: number }, index) => `
             <tr>
               <td>${index + 1}</td>
               <td>${createCarImage(winner.color, winner.id)}</td>
               <td>${winner.name}</td>
               <td>${winner.wins}</td>
               <td>${winner.time}</td>
-            </tr>`).join('')}
+            </tr>`
+            )
+            .join('')}
       </table>
   </div>`;
 

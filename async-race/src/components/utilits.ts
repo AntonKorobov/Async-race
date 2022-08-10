@@ -6,9 +6,9 @@ import {
     switchDriveMode,
     createWinner,
     updateWinner,
-    getWinner,
     getWinners,
     getCar,
+    deleteWinner,
 } from './api';
 import { renderGaragePage, renderWinnersPage } from './ui';
 import { carDataInterface } from './dataInterface';
@@ -34,6 +34,7 @@ export function deleteCarUtil(id: number): void {
         resolve(deleteCar<carDataInterface[]>(id));
     });
     tryCreateCar.then(() => renderGaragePage());
+    tryCreateCar.then(() => deleteWinner(id));
 }
 
 export function updateCarUtil(id: number): void {
@@ -52,7 +53,6 @@ export function updateCarUtil(id: number): void {
 }
 
 export type raceResult = {
-    // success: boolean;
     carId: number;
     driveTime: number;
 };
@@ -64,7 +64,6 @@ export async function startCarEngineUtil(carId: number): Promise<raceResult> {
     const { success } = await switchDriveMode(carId);
     cancelAnimationFrame(storage.animation[carId]);
     const driveTime = storage.animation[carId];
-    // console.log(success, carId, driveTime);
     if (success) {
         return Promise.resolve({ carId, driveTime });
     }
@@ -100,15 +99,12 @@ export async function stopCarEngineUtil(carId: number) {
 }
 
 export async function startRace(action: (id: number) => Promise<raceResult>): Promise<void> {
-    console.log(storage.winners);
-    console.log(storage.winners.length);
     returnCarsOnStartPosition();
     closeModalWindowWinner();
     const tryStartAllCarsPromises: Promise<raceResult>[] = storage.cars.map((id) => action(id));
     const { carId, driveTime } = await Promise.any(tryStartAllCarsPromises);
     addInformationToWinList(carId, driveTime);
     showWinner(carId, driveTime / 1000);
-    // console.log(storage.winners);
 }
 
 export function showWinner(id: number, driveTime: number): void {
@@ -119,16 +115,18 @@ export function showWinner(id: number, driveTime: number): void {
 }
 
 export async function addInformationToWinList(id: number, driveTime: number): Promise<void> {
-    const isWinnerExists = await getWinner(id);
-    if (Object.keys(isWinnerExists).length === 0) {
+    const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
+    const isWinnerExists = arrayOfWinners.find((element) => element.id === id);
+    if (!isWinnerExists) {
+        console.log('not exist');
         await createWinner(id, 1, driveTime);
     } else {
         const { id, wins, time } = isWinnerExists;
-        let winsCounter = wins;
-        if (winsCounter) winsCounter = 0;
+        console.log('winner');
         if (driveTime > time) driveTime = time;
-        await updateWinner(id, winsCounter + 1, driveTime);
+        await updateWinner(id, wins + 1, driveTime);
     }
+    updateWinners();
 }
 
 export function returnCarsOnStartPosition(): void {
@@ -146,12 +144,14 @@ export function closeModalWindowWinner(): void {
 export async function updateWinners(): Promise<void> {
     storage.winners.length = 0;
     const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
-    await Promise.all(arrayOfWinners.map(async (winner: { id: number; wins: number; time: number }) => {
-        const { name, color, id } = await getCar(winner.id);
-        const wins = winner.wins;
-        const time = winner.time;
-        storage.winners.push({ id, name, color, wins, time });
-    }));
+    await Promise.all(
+        arrayOfWinners.map(async (winner: { id: number; wins: number; time: number }) => {
+            const { name, color, id } = await getCar(winner.id);
+            const wins = winner.wins;
+            const time = winner.time;
+            storage.winners.push({ id, name, color, wins, time });
+        })
+    );
 }
 
 export function addEvents(): void {

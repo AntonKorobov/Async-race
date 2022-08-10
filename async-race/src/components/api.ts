@@ -185,3 +185,18 @@ export const getWinners = async (
         return Promise.reject(error);
     }
 };
+
+export const deleteWinner = async (id: number): Promise<void> => {
+    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'content-type': 'application/json',
+        },
+    });
+    if (response.ok) {
+        return await response.json();
+    } else {
+        const error = new Error('Error HTTP: ' + response.status);
+        return Promise.reject(error);
+    }
+};
