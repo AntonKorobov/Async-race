@@ -119,13 +119,11 @@ export async function addInformationToWinList(id: number, driveTime: number): Pr
     const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
     const isWinnerExists = arrayOfWinners.find((element) => element.id === id);
     if (!isWinnerExists) {
-        console.log('not exist');
-        await createWinner(id, 1, driveTime);
+        await createWinner(id, 1, driveTime / 1000);
     } else {
         const { id, wins, time } = isWinnerExists;
-        console.log('winner');
         if (driveTime > time) driveTime = time;
-        await updateWinner(id, wins + 1, driveTime);
+        await updateWinner(id, wins + 1, driveTime / 1000);
     }
     updateWinners();
 }
@@ -144,7 +142,7 @@ export function closeModalWindowWinner(): void {
 
 export async function updateWinners(): Promise<void> {
     storage.winners.length = 0;
-    const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
+    const arrayOfWinners = await getWinners(storage.winnersPage, storage.limitGarage, 'time', 'ASC');
     await Promise.all(
         arrayOfWinners.map(async (winner: { id: number; wins: number; time: number }) => {
             const { name, color, id } = await getCar(winner.id);
@@ -153,6 +151,39 @@ export async function updateWinners(): Promise<void> {
             storage.winners.push({ id, name, color, wins, time });
         })
     );
+}
+
+export function generateHundredCars(): { name: string; color: string }[] {
+    return new Array(100).fill(1).map(() => ({ name: getRandomCarName(), color: getRandomColor() }));
+}
+
+export function getRandomCarName(): string {
+    const arrayOfModel = [
+        'Volvo',
+        'Mclaren',
+        'Nissan',
+        'Skoda',
+        'Mini',
+        'Renault',
+        'Land Rover',
+        'Audi',
+        'Bugatti',
+        'Chevrolet',
+    ];
+    const arrayOfNames = ['V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10'];
+
+    const model = arrayOfModel[Math.floor(Math.random() * arrayOfModel.length)];
+    const name = arrayOfNames[Math.floor(Math.random() * arrayOfNames.length)];
+    return `${model} ${name}`;
+}
+
+export function getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 }
 
 export function addEvents(): void {
@@ -230,6 +261,13 @@ export function addEvents(): void {
         storage.currentWindow = 'garage';
     });
 
+    const generateButton = document.querySelector('.control-panel__button_generate') as HTMLElement;
+    generateButton.addEventListener('click', () => {
+        const hundredCars = generateHundredCars();
+        hundredCars.forEach((element) => createCar(element.name, element.color));
+        renderGaragePage();
+    });
+
     const crossButton = document.querySelector('.modal-window-winner_cross-button') as HTMLElement;
     crossButton.addEventListener('click', () => {
         returnCarsOnStartPosition();
@@ -257,12 +295,12 @@ export function addEvents(): void {
     paginationRightButton.addEventListener('click', () => {
         switch (storage.currentWindow) {
             case 'garage':
-                if (storage.garagePage < 100) storage.garagePage += 1;
+                if (storage.garagePage < 200) storage.garagePage += 1;
                 currentPageIcon.innerHTML = storage.garagePage.toString();
                 renderCars();
                 break;
             case 'winners':
-                if (storage.winnersPage < 100) storage.winnersPage += 1;
+                if (storage.winnersPage < 200) storage.winnersPage += 1;
                 currentPageIcon.innerHTML = storage.winnersPage.toString();
                 renderWinnersPage();
                 break;

@@ -13,6 +13,8 @@ interface storageInterface {
     cars: number[];
     animation: { [carId: number]: number };
     winners: winnersInterface[];
+    allCarsNumber: number;
+    limitGarage: number;
 }
 
 export const storage: storageInterface = {
@@ -22,4 +24,6 @@ export const storage: storageInterface = {
     cars: [],
     animation: {},
     winners: [],
+    allCarsNumber: 200,
+    limitGarage: 7,
 };

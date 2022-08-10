@@ -142,7 +142,7 @@ export async function renderWinnersPage(): Promise<void> {
             <th>Car</th>
             <th>Model</th>
             <th>Wins</th>
-            <th>Time</th>
+            <th>Time(sec)</th>
           </tr>
         ${storage.winners
             .map(

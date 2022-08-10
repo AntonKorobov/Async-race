@@ -1,4 +1,4 @@
-export const limitGarage = 7;
+import { storage } from './storage';
 
 export type getCarResponse = {
     name: string;
@@ -12,7 +12,7 @@ export const getCar = async (id: number): Promise<getCarResponse> => {
     return await response.json();
 };
 
-export const getCars = async <T>(page: number, limit = limitGarage): Promise<T> => {
+export const getCars = async <T>(page: number, limit = storage.limitGarage): Promise<T> => {
     const response = await fetch(`http://127.0.0.1:3000/garage?_page=${page}&_limit=${limit}`);
     if (response.ok) {
         return await response.json();
