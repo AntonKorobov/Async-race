@@ -10,7 +10,7 @@ import {
     getCar,
     deleteWinner,
 } from './api';
-import { renderGaragePage, renderWinnersPage } from './ui';
+import { renderGaragePage, renderWinnersPage, renderCars } from './ui';
 import { carDataInterface } from './dataInterface';
 import { storage } from './storage';
 
@@ -221,16 +221,51 @@ export function addEvents(): void {
     const winnersButton = document.querySelector('.control-panel__button_to-winners') as HTMLElement;
     winnersButton.addEventListener('click', () => {
         renderWinnersPage();
+        storage.currentWindow = 'winners';
     });
 
     const garageButton = document.querySelector('.control-panel__button_to-garage') as HTMLElement;
     garageButton.addEventListener('click', () => {
         renderGaragePage();
+        storage.currentWindow = 'garage';
     });
 
     const crossButton = document.querySelector('.modal-window-winner_cross-button') as HTMLElement;
     crossButton.addEventListener('click', () => {
         returnCarsOnStartPosition();
         closeModalWindowWinner();
+    });
+
+    const currentPageIcon = document.querySelector('.pagination__page-number') as HTMLElement;
+    const paginationLeftButton = document.querySelector('.pagination__left') as HTMLElement;
+    paginationLeftButton.addEventListener('click', () => {
+        switch (storage.currentWindow) {
+            case 'garage':
+                if (storage.garagePage !== 1) storage.garagePage -= 1;
+                currentPageIcon.innerHTML = storage.garagePage.toString();
+                renderCars();
+                break;
+            case 'winners':
+                if (storage.winnersPage !== 1) storage.winnersPage -= 1;
+                storage.winnersPage.toString();
+                renderWinnersPage();
+                break;
+        }
+    });
+
+    const paginationRightButton = document.querySelector('.pagination__right') as HTMLElement;
+    paginationRightButton.addEventListener('click', () => {
+        switch (storage.currentWindow) {
+            case 'garage':
+                if (storage.garagePage < 100) storage.garagePage += 1;
+                currentPageIcon.innerHTML = storage.garagePage.toString();
+                renderCars();
+                break;
+            case 'winners':
+                if (storage.winnersPage < 100) storage.winnersPage += 1;
+                currentPageIcon.innerHTML = storage.winnersPage.toString();
+                renderWinnersPage();
+                break;
+        }
     });
 }

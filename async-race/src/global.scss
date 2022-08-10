@@ -127,6 +127,13 @@ a {
   }
 }
 
+.control-panel__pagination-buttons {
+  display: flex;
+  margin-top: 1rem;
+  justify-content: center;
+  gap: 1rem;
+}
+
 .page-area {
   flex-grow: 1;
   display: flex;

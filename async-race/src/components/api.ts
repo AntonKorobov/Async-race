@@ -1,4 +1,4 @@
-const limitGarage = 100;
+export const limitGarage = 7;
 
 export type getCarResponse = {
     name: string;

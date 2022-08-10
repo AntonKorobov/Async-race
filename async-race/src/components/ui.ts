@@ -5,7 +5,7 @@ import { updateWinners } from './utilits';
 
 export async function renderCars(): Promise<void> {
     storage.cars.length = 0;
-    const cars = await getCars<carDataInterface[]>(1);
+    const cars = await getCars<carDataInterface[]>(storage.garagePage);
 
     const garage = document.querySelector('.page-area__garage') as HTMLElement;
 
@@ -82,6 +82,11 @@ export function render(): void {
           <button class="control-panel__button control-panel__button_reset button">RESET</button>
           <button class="control-panel__button control-panel__button_generate button">GENERATE CARS</button>
         </div>
+        <div class="control-panel__pagination-buttons pagination">
+          <button class="button pagination__left">LEFT</button>
+          <p class="pagination__page-number" data-page="${storage.garagePage}">${storage.garagePage}</p>
+          <button class="button pagination__right">RIGHT</button>
+        </div>
       </section>
       <section class="page-area page-area_garage-page page-visible">
         <div class="page-area__garage">
@@ -122,6 +127,8 @@ export function render(): void {
 export async function renderWinnersPage(): Promise<void> {
     await updateWinners();
 
+    const currentPageIcon = document.querySelector('.pagination__page-number') as HTMLElement;
+    currentPageIcon.innerHTML = storage.winnersPage.toString();
     const garagePage = document.querySelector('.page-area_garage-page') as HTMLElement;
     garagePage.classList.remove('page-visible');
 
@@ -156,6 +163,8 @@ export async function renderWinnersPage(): Promise<void> {
 }
 
 export async function renderGaragePage(): Promise<void> {
+    const currentPageIcon = document.querySelector('.pagination__page-number') as HTMLElement;
+    currentPageIcon.innerHTML = storage.garagePage.toString();
     const garagePage = document.querySelector('.page-area_garage-page') as HTMLElement;
     garagePage.classList.add('page-visible');
 
