@@ -1,25 +1,40 @@
-import { storage } from './storage';
-
 export type getCarResponse = {
     name: string;
     color: string;
     id: number;
 };
+export type getCarsResponse = {
+    cars: Array<{
+        name: string;
+        color: string;
+        id: number;
+    }>;
+    count: string | null;
+};
+export const getCars = async (page?: number, limit?: number): Promise<getCarsResponse> => {
+    const response = await fetch(`http://127.0.0.1:3000/garage?_page=${page}&_limit=${limit}`);
+    // if (response.ok) {
+    //     return await response.json();
+    // } else {
+    //     const error = new Error('Error HTTP: ' + response.status);
+    //     return Promise.reject(error);
+    // }
+    if (response.ok) {
+        return {
+            cars: await response.json(),
+            count: response.headers.get('X-Total-Count'),
+        };
+    } else {
+        const error = new Error('Error HTTP: ' + response.status);
+        return Promise.reject(error);
+    }
+};
+
 export const getCar = async (id: number): Promise<getCarResponse> => {
     const response = await fetch(`http://127.0.0.1:3000/garage/${id}`, {
         method: 'GET',
     });
     return await response.json();
-};
-
-export const getCars = async <T>(page: number, limit = storage.limitGarage): Promise<T> => {
-    const response = await fetch(`http://127.0.0.1:3000/garage?_page=${page}&_limit=${limit}`);
-    if (response.ok) {
-        return await response.json();
-    } else {
-        const error = new Error('Error HTTP: ' + response.status);
-        return Promise.reject(error);
-    }
 };
 
 export const createCar = async <T>(name: string, color: string): Promise<T> => {
@@ -160,26 +175,32 @@ export const getWinner = async (id: number): Promise<getWinnerResponse> => {
 };
 
 export type SortType = 'id' | 'wins' | 'time';
-export type OrderType = 'ASC' | 'DESC';
+export type OrderType = 'asc' | 'desc';
 export type getWinnersResponse = {
-    id: number;
-    wins: number;
-    time: number;
-}[];
+    winners: Array<{
+        id: number;
+        wins: number;
+        time: number;
+    }>;
+    count: string | null;
+};
 export const getWinners = async (
     page: number,
-    limit: number,
-    sort: SortType,
-    order: OrderType
+    limit?: number,
+    sort?: SortType,
+    order?: OrderType
 ): Promise<getWinnersResponse> => {
     const response = await fetch(
-        `http://127.0.0.1:3000/winners?_page=${page}&_limit=${limit}$_sort${sort}$_order${order}`,
+        `http://127.0.0.1:3000/winners?_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`,
         {
             method: 'GET',
         }
     );
     if (response.ok) {
-        return await response.json();
+        return {
+            winners: await response.json(),
+            count: response.headers.get('X-Total-Count'),
+        };
     } else {
         const error = new Error('Error HTTP: ' + response.status);
         return Promise.reject(error);

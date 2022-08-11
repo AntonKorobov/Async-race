@@ -15,6 +15,10 @@ interface storageInterface {
     winners: winnersInterface[];
     allCarsNumber: number;
     limitGarage: number;
+    limitWinners: number;
+    sort: 'time' | 'wins';
+    winnersCount: string;
+    carsCount: string;
 }
 
 export const storage: storageInterface = {
@@ -26,4 +30,8 @@ export const storage: storageInterface = {
     winners: [],
     allCarsNumber: 200,
     limitGarage: 7,
+    limitWinners: 10,
+    sort: 'time',
+    winnersCount: '1',
+    carsCount: '1',
 };

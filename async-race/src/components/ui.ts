@@ -1,22 +1,27 @@
-import { carDataInterface } from './dataInterface';
 import { getCars } from './api';
 import { storage } from './storage';
 import { updateWinners } from './utilits';
 
 export async function renderCars(): Promise<void> {
     storage.cars.length = 0;
-    const cars = await getCars<carDataInterface[]>(storage.garagePage);
+
+    const count = await getCars(1);
+    if (count.count) {
+        storage.carsCount = count.count;
+    }
+
+    const cars = await getCars(storage.garagePage, storage.limitGarage);
 
     const garage = document.querySelector('.page-area__garage') as HTMLElement;
 
     garage.innerHTML = '';
-    for (let i = 0; i < cars.length; i++) {
+    for (let i = 0; i < cars.cars.length; i++) {
         const car = document.createElement('div');
         car.classList.add('car');
-        car.innerHTML = renderCar(cars[i].name, cars[i].id, cars[i].color);
+        car.innerHTML = renderCar(cars.cars[i].name, cars.cars[i].id, cars.cars[i].color);
         garage.appendChild(car);
 
-        storage.cars.push(cars[i].id);
+        storage.cars.push(cars.cars[i].id);
     }
 }
 
@@ -97,8 +102,10 @@ export function render(): void {
         </div>
       </section>
       <section class="page-area page-area_winners-page">
-        <div class="page-area__winners-page">
+        <div class="page-area__winners-table-wrapper">
         </div>
+        <button class="button page-area_wins-button">Sort by Wins</button>
+        <button class="button page-area_time-button">Sort by Time</button>
       </section>
     </div>
   </main>
@@ -125,7 +132,7 @@ export function render(): void {
 }
 
 export async function renderWinnersPage(): Promise<void> {
-    await updateWinners('ASC');
+    await updateWinners(storage.sort);
 
     const currentPageIcon = document.querySelector('.pagination__page-number') as HTMLElement;
     currentPageIcon.innerHTML = storage.winnersPage.toString();
@@ -134,6 +141,7 @@ export async function renderWinnersPage(): Promise<void> {
 
     const winnersPage = document.querySelector('.page-area_winners-page') as HTMLElement;
     winnersPage.classList.add('page-visible');
+    const winnersTable = document.querySelector('.page-area__winners-table-wrapper') as HTMLElement;
     const html = `
     <div class="winners-table">
       <table>
@@ -157,11 +165,9 @@ export async function renderWinnersPage(): Promise<void> {
             )
             .join('')}
       </table>
-      <button class="button page-area_wins-button">Sort by Wins</button>
-      <button class="button page-area_time-button">Sort by Time</button>
   </div>`;
 
-    winnersPage.innerHTML = html;
+    winnersTable.innerHTML = html;
 }
 
 export async function renderGaragePage(): Promise<void> {

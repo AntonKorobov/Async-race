@@ -264,6 +264,17 @@ a {
   display: flex;
 }
 
+.page-area_winners-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .button {
+    display: inline-block;
+    margin-top: 1rem;
+    width: 10rem;
+  }
+}
+
 .winners-table {
   display: flex;
   flex-direction: column;

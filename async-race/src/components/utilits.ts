@@ -9,6 +9,7 @@ import {
     getWinners,
     getCar,
     deleteWinner,
+    OrderType,
 } from './api';
 import { renderGaragePage, renderWinnersPage, renderCars } from './ui';
 import { carDataInterface } from './dataInterface';
@@ -116,16 +117,16 @@ export function showWinner(model: string, driveTime: number): void {
 }
 
 export async function addInformationToWinList(id: number, driveTime: number): Promise<void> {
-    const arrayOfWinners = await getWinners(1, 100, 'time', 'ASC');
-    const isWinnerExists = arrayOfWinners.find((element) => element.id === id);
+    const arrayOfWinners = await getWinners(1, 10, storage.sort, 'desc');
+    const isWinnerExists = arrayOfWinners.winners.find((element) => element.id === id);
     if (!isWinnerExists) {
         await createWinner(id, 1, driveTime / 1000);
     } else {
         const { id, wins, time } = isWinnerExists;
         if (driveTime > time) driveTime = time;
-        await updateWinner(id, wins + 1, driveTime / 1000);
+        await updateWinner(id, wins + 1, driveTime);
     }
-    updateWinners('ASC');
+    updateWinners(storage.sort);
 }
 
 export function returnCarsOnStartPosition(): void {
@@ -140,11 +141,19 @@ export function closeModalWindowWinner(): void {
     modalWindowWinner.classList.remove('modal-window-winner_visible');
 }
 
-export async function updateWinners(sort: 'ASC' | 'DESC'): Promise<void> {
+export async function updateWinners(sort: 'time' | 'wins'): Promise<void> {
     storage.winners.length = 0;
-    const arrayOfWinners = await getWinners(storage.winnersPage, storage.limitGarage, 'time', sort);
+    storage.sort = sort;
+    let sortType: OrderType = 'desc';
+    if (storage.sort === 'time') sortType = 'asc';
+
+    const count = await getWinners(1);
+    if (count.count) {
+        storage.winnersCount = count.count;
+    }
+    const arrayOfWinners = await getWinners(storage.winnersPage, storage.limitWinners, storage.sort, sortType);
     await Promise.all(
-        arrayOfWinners.map(async (winner: { id: number; wins: number; time: number }) => {
+        arrayOfWinners.winners.map(async (winner: { id: number; wins: number; time: number }) => {
             const { name, color, id } = await getCar(winner.id);
             const wins = winner.wins;
             const time = winner.time;
@@ -295,12 +304,12 @@ export function addEvents(): void {
     paginationRightButton.addEventListener('click', () => {
         switch (storage.currentWindow) {
             case 'garage':
-                if (storage.garagePage < 200) storage.garagePage += 1;
+                if (storage.garagePage < Number(storage.carsCount) / storage.limitGarage) storage.garagePage += 1;
                 currentPageIcon.innerHTML = storage.garagePage.toString();
                 renderCars();
                 break;
             case 'winners':
-                if (storage.winnersPage < 200) storage.winnersPage += 1;
+                if (storage.winnersPage < Number(storage.winnersCount) / storage.limitWinners) storage.winnersPage += 1;
                 currentPageIcon.innerHTML = storage.winnersPage.toString();
                 renderWinnersPage();
                 break;
@@ -309,11 +318,13 @@ export function addEvents(): void {
 
     const sortByTimeButton = document.querySelector('.page-area_time-button') as HTMLElement;
     sortByTimeButton.addEventListener('click', () => {
-        updateWinners('ASC');
+        storage.sort = 'time';
+        renderWinnersPage();
     });
 
     const sortByWinsButton = document.querySelector('.page-area_wins-button') as HTMLElement;
     sortByWinsButton.addEventListener('click', () => {
-        updateWinners('DESC');
+        storage.sort = 'wins';
+        renderWinnersPage();
     });
 }
