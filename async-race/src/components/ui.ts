@@ -65,7 +65,7 @@ export function render(): void {
     <header class="header">
       <div class="header__container container">
         <a href="#" class="title">
-          <h1>Async-race (Work in progress... Sorry)</h1>
+          <h1>Async-race</h1>
         </a>
       </div>
   </header>
