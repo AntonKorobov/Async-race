@@ -1,24 +1,17 @@
-export type getCarResponse = {
-    name: string;
-    color: string;
-    id: number;
-};
-export type getCarsResponse = {
-    cars: Array<{
-        name: string;
-        color: string;
-        id: number;
-    }>;
-    count: string | null;
-};
+import {
+    driveCarResponse,
+    engineStatus,
+    getCarResponse,
+    getCarsResponse,
+    getWinnerResponse,
+    getWinnersResponse,
+    OrderType,
+    SortType,
+    startCarEngineResponse,
+} from './types';
+
 export const getCars = async (page?: number, limit?: number): Promise<getCarsResponse> => {
     const response = await fetch(`http://127.0.0.1:3000/garage?_page=${page}&_limit=${limit}`);
-    // if (response.ok) {
-    //     return await response.json();
-    // } else {
-    //     const error = new Error('Error HTTP: ' + response.status);
-    //     return Promise.reject(error);
-    // }
     if (response.ok) {
         return {
             cars: await response.json(),
@@ -87,11 +80,6 @@ export const updateCar = async <T>(id: number, name: string, color: string): Pro
     }
 };
 
-type engineStatus = 'started' | 'stopped';
-type startCarEngineResponse = {
-    velocity: number;
-    distance: number;
-};
 export const startStopCarEngine = async (id: number, status: engineStatus): Promise<startCarEngineResponse> => {
     const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
         method: 'PATCH',
@@ -104,16 +92,12 @@ export const startStopCarEngine = async (id: number, status: engineStatus): Prom
     }
 };
 
-type driveCarResponse = {
-    success: boolean;
-};
 export const switchDriveMode = async (id: number, status = 'drive'): Promise<driveCarResponse> => {
     const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
         method: 'PATCH',
     });
     if (response.status !== 200) {
         return { success: false };
-        // return Promise.reject({ success: false });
     } else {
         return { ...(await response.json()) };
     }
@@ -158,11 +142,6 @@ export const updateWinner = async (id: number, wins: number, time: number): Prom
     }
 };
 
-export type getWinnerResponse = {
-    id: number;
-    wins: number;
-    time: number;
-};
 export const getWinner = async (id: number): Promise<getWinnerResponse> => {
     const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
         method: 'GET',
@@ -174,18 +153,8 @@ export const getWinner = async (id: number): Promise<getWinnerResponse> => {
     }
 };
 
-export type SortType = 'id' | 'wins' | 'time';
-export type OrderType = 'asc' | 'desc';
-export type getWinnersResponse = {
-    winners: Array<{
-        id: number;
-        wins: number;
-        time: number;
-    }>;
-    count: string | null;
-};
 export const getWinners = async (
-    page: number,
+    page = 1,
     limit?: number,
     sort?: SortType,
     order?: OrderType

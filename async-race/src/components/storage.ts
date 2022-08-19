@@ -28,10 +28,10 @@ export const storage: storageInterface = {
     cars: [],
     animation: {},
     winners: [],
-    allCarsNumber: 200,
+    allCarsNumber: 0,
     limitGarage: 7,
     limitWinners: 10,
     sort: 'time',
-    winnersCount: '1',
-    carsCount: '1',
+    winnersCount: '0',
+    carsCount: '0',
 };
