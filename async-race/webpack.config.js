@@ -24,8 +24,6 @@ const baseConfig = {
         new CopyWebpackPlugin({
             patterns: [
               { from: "src/assets", to: "assets" },
-            //   { from: "src/components/booksBase.json", to: "components/booksBase.json"}
-            //   { from: "other", to: "public" },
             ],
           }),
     ],
@@ -41,47 +39,23 @@ const baseConfig = {
             },
             {
                 test: /\.(?:ico|gif|png|jpg|jpeg|svg)$/i,
-                // use: [{
-                //     loader: 'file-loader',
-                //     options: {
-                //         name: '[name].[ext]',
-                //         outputPath: 'assets/images/'
-                //     }
-                // }]
                 type: 'asset/resource',
                 generator: {
                     filename: 'assets/[name][ext]',
                 }
             },
-            // {
-            //     test: /\.json$/,
-            //     type: 'asset/resource',
-            //     generator: {
-            //         filename: './components/[name][ext]',
-            //     }
-            // },
             {
                 test: /\.html$/,
                 use: [
                     'html-loader'
                 ]
             },
-            // {
-            //     test: /\.json$/,
-            //     use: ['json-loader'],
-            // },
         ],
     },
     resolve: {
         extensions: ['.ts', '.js'],
     },
     experiments: {
-        // asyncWebAssembly: true,
-        // buildHttp: true,
-        // layers: true,
-        // lazyCompilation: true,
-        // outputModule: true,
-        // syncWebAssembly: true,
         topLevelAwait: true,
       },
 }

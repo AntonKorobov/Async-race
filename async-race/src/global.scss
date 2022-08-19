@@ -58,7 +58,6 @@ a {
 }
 
 .main {
-  // height: 100%;
   padding: 10px 40px;
 }
 
@@ -137,7 +136,6 @@ a {
 .page-area {
   flex-grow: 1;
   display: flex;
-  // border: 2px solid #ccc;
 }
 
 .page-area__garage {
@@ -148,13 +146,8 @@ a {
   width: 10rem;
 }
 
-.car {
- 
-}
-
 .car__img {
   display: block;
-  // width: 100%;
   padding: 0.5rem;
 }
 
@@ -166,7 +159,6 @@ a {
   width: 35rem;
   display: flex;
   gap: 1rem;
-  // overflow-x: hidden;
 }
 
 .car__buttons-wrapper {
@@ -205,7 +197,6 @@ a {
 
 .page-area__finish {
   width: 10rem;
-  // border: 2px solid #ccc;
 }
 
 .footer {

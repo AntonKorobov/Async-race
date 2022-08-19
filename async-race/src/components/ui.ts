@@ -245,7 +245,9 @@ export async function startCarEngineUtil(carId: number): Promise<raceResult> {
 }
 
 export function animation(carId: number, carImage: HTMLElement, velocity: number, distance: number): void {
-    const TRACK_LENGTH = (document.querySelector('.page-area__track') as HTMLElement).offsetWidth + 100;
+    const GARAGE_LENGTH = (document.querySelector('.page-area__garage') as HTMLElement).offsetWidth;
+    const TRACK_LENGTH = (document.querySelector('.page-area__track') as HTMLElement).offsetWidth;
+    const RACE_LENGTH = GARAGE_LENGTH + TRACK_LENGTH;
     let start = 0;
     let driveTime = 0;
 
@@ -254,7 +256,7 @@ export function animation(carId: number, carImage: HTMLElement, velocity: number
         if (start === 0) start = timestamp;
         driveTime = timestamp - start;
         const progress = driveTime / duration;
-        carImage.style.transform = `translateX(${TRACK_LENGTH * progress}px)`;
+        carImage.style.transform = `translateX(${RACE_LENGTH * progress}px)`;
         if (progress < 1) {
             storage.animation[carId] = requestAnimationFrame(startCarAnimation);
         } else {
