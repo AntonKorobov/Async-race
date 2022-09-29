@@ -10,8 +10,11 @@ import {
     startCarEngineResponse,
 } from './types';
 
+// const server_URL = 'http://127.0.0.1:3000';
+const server_URL = 'https://chimerical-madeleine-9830fc.netlify.app';
+
 export const getCars = async (page?: number, limit?: number): Promise<getCarsResponse> => {
-    const response = await fetch(`http://127.0.0.1:3000/garage?_page=${page}&_limit=${limit}`);
+    const response = await fetch(`${server_URL}/garage?_page=${page}&_limit=${limit}`);
     if (response.ok) {
         return {
             cars: await response.json(),
@@ -24,14 +27,14 @@ export const getCars = async (page?: number, limit?: number): Promise<getCarsRes
 };
 
 export const getCar = async (id: number): Promise<getCarResponse> => {
-    const response = await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+    const response = await fetch(`${server_URL}/garage/${id}`, {
         method: 'GET',
     });
     return await response.json();
 };
 
 export const createCar = async <T>(name: string, color: string): Promise<T> => {
-    const response = await fetch(`http://127.0.0.1:3000/garage/`, {
+    const response = await fetch(`${server_URL}/garage/`, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
@@ -50,7 +53,7 @@ export const createCar = async <T>(name: string, color: string): Promise<T> => {
 };
 
 export const deleteCar = async <T>(id: number): Promise<T> => {
-    const response = await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+    const response = await fetch(`${server_URL}/garage/${id}`, {
         method: 'DELETE',
     });
     if (response.ok) {
@@ -62,7 +65,7 @@ export const deleteCar = async <T>(id: number): Promise<T> => {
 };
 
 export const updateCar = async <T>(id: number, name: string, color: string): Promise<T> => {
-    const response = await fetch(`http://127.0.0.1:3000/garage/${id}`, {
+    const response = await fetch(`${server_URL}/garage/${id}`, {
         method: 'PUT',
         headers: {
             'content-type': 'application/json',
@@ -81,7 +84,7 @@ export const updateCar = async <T>(id: number, name: string, color: string): Pro
 };
 
 export const startStopCarEngine = async (id: number, status: engineStatus): Promise<startCarEngineResponse> => {
-    const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
+    const response = await fetch(`${server_URL}/engine?id=${id}&status=${status}`, {
         method: 'PATCH',
     });
     if (response.ok) {
@@ -93,7 +96,7 @@ export const startStopCarEngine = async (id: number, status: engineStatus): Prom
 };
 
 export const switchDriveMode = async (id: number, status = 'drive'): Promise<driveCarResponse> => {
-    const response = await fetch(`http://127.0.0.1:3000/engine?id=${id}&status=${status}`, {
+    const response = await fetch(`${server_URL}/engine?id=${id}&status=${status}`, {
         method: 'PATCH',
     });
     if (response.status !== 200) {
@@ -104,7 +107,7 @@ export const switchDriveMode = async (id: number, status = 'drive'): Promise<dri
 };
 
 export const createWinner = async (id: number, wins: number, time: number): Promise<void> => {
-    const response = await fetch(`http://127.0.0.1:3000/winners`, {
+    const response = await fetch(`${server_URL}/winners`, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
@@ -124,7 +127,7 @@ export const createWinner = async (id: number, wins: number, time: number): Prom
 };
 
 export const updateWinner = async (id: number, wins: number, time: number): Promise<void> => {
-    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+    const response = await fetch(`${server_URL}/winners/${id}`, {
         method: 'PUT',
         headers: {
             'content-type': 'application/json',
@@ -143,7 +146,7 @@ export const updateWinner = async (id: number, wins: number, time: number): Prom
 };
 
 export const getWinner = async (id: number): Promise<getWinnerResponse> => {
-    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+    const response = await fetch(`${server_URL}/winners/${id}`, {
         method: 'GET',
     });
     if (response.status !== 200) {
@@ -159,12 +162,9 @@ export const getWinners = async (
     sort?: SortType,
     order?: OrderType
 ): Promise<getWinnersResponse> => {
-    const response = await fetch(
-        `http://127.0.0.1:3000/winners?_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`,
-        {
-            method: 'GET',
-        }
-    );
+    const response = await fetch(`${server_URL}/winners?_page=${page}&_limit=${limit}&_sort=${sort}&_order=${order}`, {
+        method: 'GET',
+    });
     if (response.ok) {
         return {
             winners: await response.json(),
@@ -177,7 +177,7 @@ export const getWinners = async (
 };
 
 export const deleteWinner = async (id: number): Promise<void> => {
-    const response = await fetch(`http://127.0.0.1:3000/winners/${id}`, {
+    const response = await fetch(`${server_URL}/winners/${id}`, {
         method: 'DELETE',
         headers: {
             'content-type': 'application/json',
